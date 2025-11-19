@@ -33,6 +33,111 @@ Small CA firms (2-5 employees, 20-30 clients) are drowning in operational chaos:
 
 ---
 
+## Technology Stack
+
+### 🔧 Backend Stack
+
+| Component         | Technology                    | Version | Purpose                          |
+|-------------------|-------------------------------|---------|----------------------------------|
+| **Runtime**       | Java                          | 21 LTS  | Primary backend language         |
+| **Framework**     | Spring Boot                   | 3.5.x   | REST API & business logic        |
+| **Security**      | Spring Security + AWS Cognito | Latest  | Authentication & authorization   |
+| **Database**      | MongoDB Atlas                 | Latest  | Primary database (NoSQL)         |
+| **API Gateway**   | AWS API Gateway               | -       | API management & OIDC            |
+| **File Storage**  | AWS S3                        | -       | Document storage                 |
+| **OCR Engine**    | AWS Textract                  | -       | Invoice & document processing    |
+| **Cache**         | Redis (ElastiCache)           | Latest  | Session & data caching           |
+| **Message Queue** | AWS SQS                       | -       | Async processing & GST API retry |
+
+### 🎨 Frontend Stack
+
+| Component            | Technology                      | Version    | Purpose                         |
+|----------------------|---------------------------------|------------|---------------------------------|
+| **Framework**        | Expo                            | Latest SDK | Web + Mobile (unified codebase) |
+| **UI Library**       | React Native                    | Latest     | Cross-platform UI components    |
+| **Web Support**      | Expo Web                        | Latest     | PWA & responsive web app        |
+| **State Management** | Redux Toolkit / Zustand         | Latest     | Global state management         |
+| **API Client**       | Axios / React Query             | Latest     | HTTP client & data fetching     |
+| **Forms**            | React Hook Form                 | Latest     | Form validation & handling      |
+| **UI Components**    | React Native Paper / NativeBase | Latest     | Pre-built UI components         |
+| **Navigation**       | Expo Router                     | Latest     | File-based routing              |
+
+### ☁️ AWS Infrastructure & Security
+
+| Service             | Purpose                                      |
+|---------------------|----------------------------------------------|
+| **AWS Cognito**     | User authentication, multi-tenant user pools |
+| **AWS S3**          | Document storage with encryption at rest     |
+| **AWS Textract**    | OCR processing for invoices & documents      |
+| **AWS Lambda**      | Serverless functions for OCR processing      |
+| **AWS API Gateway** | API management, throttling, OIDC integration |
+| **AWS CloudWatch**  | Logging, monitoring, and alerting            |
+| **AWS SQS**         | Message queuing for GST API retry logic      |
+| **AWS ElastiCache** | Redis cache for session management           |
+| **AWS VPC**         | Network isolation & security                 |
+| **AWS KMS**         | Encryption key management                    |
+| **AWS CloudFront**  | CDN for static assets                        |
+| **AWS Route 53**    | DNS management                               |
+| **AWS RDS Proxy**   | Connection pooling (if needed)               |
+
+### 🔄 DevOps & CI/CD
+
+| Component                   | Technology               | Purpose                       |
+|-----------------------------|--------------------------|-------------------------------|
+| **SCM**                     | GitHub                   | Source code management        |
+| **CI/CD**                   | GitHub Actions           | Automated build, test, deploy |
+| **Container Registry**      | AWS ECR                  | Docker image storage          |
+| **Container Orchestration** | AWS ECS / Fargate        | Container deployment          |
+| **Infrastructure as Code**  | Terraform / AWS CDK      | Infrastructure automation     |
+| **Secrets Management**      | AWS Secrets Manager      | API keys & credentials        |
+| **Monitoring**              | AWS CloudWatch + DataDog | Application monitoring        |
+| **Error Tracking**          | Sentry                   | Error tracking & debugging    |
+
+### 🔌 External Integrations
+
+| Integration               | Purpose                            | Provider        |
+|---------------------------|------------------------------------|-----------------|
+| **WhatsApp Business API** | Document collection, notifications | Meta / Twilio   |
+| **GST Portal API**        | GSTR-2A/2B fetch, filing           | GSTN            |
+| **Tally Integration**     | Accounting data sync               | Tally Solutions |
+| **Payment Gateway**       | Payment collection                 | Razorpay / PayU |
+| **SMS Gateway**           | Payment reminders                  | AWS SNS / MSG91 |
+| **Email Service**         | Notifications                      | AWS SES         |
+
+### 🧪 Testing & Quality
+
+| Tool                             | Purpose                          |
+|----------------------------------|----------------------------------|
+| **JUnit 5**                      | Backend unit testing             |
+| **Mockito**                      | Mocking framework                |
+| **TestContainers**               | Integration testing with MongoDB |
+| **Jest**                         | Frontend unit testing            |
+| **React Native Testing Library** | Component testing                |
+| **Detox**                        | E2E testing for mobile           |
+| **Postman / Newman**             | API testing                      |
+| **SonarQube**                    | Code quality analysis            |
+
+### 📊 Analytics & Reporting
+
+| Tool                     | Purpose                            |
+|--------------------------|------------------------------------|
+| **AWS QuickSight**       | Business intelligence & dashboards |
+| **Mixpanel / Amplitude** | User analytics                     |
+| **Google Analytics**     | Web analytics                      |
+
+### 🛠️ Development Tools
+
+| Tool                | Purpose                     |
+|---------------------|-----------------------------|
+| **IntelliJ IDEA**   | Backend development IDE     |
+| **VS Code**         | Frontend development IDE    |
+| **Postman**         | API testing & documentation |
+| **MongoDB Compass** | Database management         |
+| **Docker Desktop**  | Local containerization      |
+| **Expo Go**         | Mobile app testing          |
+
+---
+
 ## Revised Project Plan with Timeline
 
 ### Phase 0: Foundation & Infrastructure (Weeks 1-2)
@@ -44,14 +149,16 @@ Small CA firms (2-5 employees, 20-30 clients) are drowning in operational chaos:
 - MongoDB Atlas setup with encryption
 - AWS S3 configuration for document storage
 - AWS Textract setup for OCR capabilities
-- CI/CD pipeline with GitLab
+- GitHub repository setup with branch protection
+- CI/CD pipeline with GitHub Actions
 
 #### Week 2: Development Environment
 - Spring Boot 3.5 project scaffold with Java 21
-- React/React Native monorepo setup
+- Expo project setup (web + mobile)
 - API Gateway configuration with OIDC
 - Development, staging, production environments
 - Logging and monitoring setup (CloudWatch)
+- Docker containerization setup
 
 
 ---
