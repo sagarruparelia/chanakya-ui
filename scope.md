@@ -366,6 +366,200 @@ Every API request must be scoped to the authenticated tenant to prevent data lea
 > minimal scope changes. A more realistic timeline for the full scope would be **40-45 weeks**. Consider MVP scope
 > reduction (focus on Phases 0-2 only for first release: document upload, OCR, reconciliation, basic GST filing).
 
+---
+
+## 🚀 Solo Founder Track (Recommended for Individual Developers)
+
+> **Context:** If you're building this solo (founder + Claude Code as development assistant), the full 26-week plan is unrealistic. This section provides a **lean, validated approach** for solo founders.
+
+### Solo Founder Reality
+
+| Aspect                   | Full Team Plan                                   | Solo Founder Reality                   | Adjustment                |
+|--------------------------|--------------------------------------------------|----------------------------------------|---------------------------|
+| **Team Size**            | 5 people (Backend, Frontend, DevOps, PM, CA)     | 1 person + AI assistant                | Focus only on essentials  |
+| **Development Capacity** | 260 person-weeks (26 weeks × 5 people × 2 weeks) | 26 person-weeks                        | **Build 10% of features** |
+| **Timeline to MVP**      | 26 weeks (aggressive)                            | **12 weeks** (realistic)               | Ruthless prioritization   |
+| **Budget**               | ₹8.5-11.5L/month (team + tech)                   | **₹10K/month** (tech only, free tiers) | Bootstrap mode            |
+| **Initial Customers**    | 20 CAs by Week 26                                | **2-3 CAs by Week 12**                 | Validation-focused        |
+
+### Solo MVP Scope (12 Weeks)
+
+**Focus:** Solve ONE problem exceptionally well - **Document Collection Chaos**
+
+#### What to Build (Must-Have)
+
+```
+Phase 1: Foundation (Week 1-2)
+├── AWS setup (Cognito, S3, Textract)
+├── Spring Boot API (minimal endpoints)
+├── Expo mobile app (document capture)
+└── Basic authentication
+
+Phase 2: Core Feature (Week 3-6)
+├── Mobile camera document scanning
+├── OCR processing (AWS Textract)
+├── Document categorization
+├── Basic web view for CA staff
+└── Document approval workflow
+
+Phase 3: Validation (Week 7-10)
+├── GSTR-1 form (manual entry)
+├── Basic deadline reminders
+├── Export to Excel/PDF
+└── WhatsApp notifications
+
+Phase 4: Pilot (Week 11-12)
+├── Bug fixes
+├── Polish UX
+├── Onboard 2-3 CA partners
+└── Collect feedback
+```
+
+#### What to DEFER (Build After Validation)
+
+- ❌ **Reconciliation engine** (Week 13-20) - Build after CAs confirm they need it
+- ❌ **Tally integration** (Week 21-26) - Complex, need CA partner buy-in first
+- ❌ **Payment tracking** (Week 27-30) - Secondary problem
+- ❌ **Construction module** (Week 31-35) - Niche, validate market first
+- ❌ **AI features** (Week 36+) - Need training data from real usage
+- ❌ **Advanced analytics** (Week 36+) - Nice-to-have
+
+### Solo Founder Timeline (12-Week MVP)
+
+| Week      | Focus                | Key Deliverables                               | Hours  | Tools                        |
+|-----------|----------------------|------------------------------------------------|--------|------------------------------|
+| **1-2**   | **Setup & Auth**     | AWS config, project scaffolds, login           | 60-80h | Claude Code, AWS Console     |
+| **3-4**   | **Document Capture** | Mobile camera, upload, OCR trigger             | 60-80h | Expo, expo-camera            |
+| **5-6**   | **OCR Processing**   | Textract integration, data extraction, display | 60-80h | AWS SDK, Spring Boot         |
+| **7-8**   | **Web Dashboard**    | CA staff view, document approval               | 60-80h | Expo Web, React Native Paper |
+| **9-10**  | **GST Forms**        | GSTR-1 basic form, Excel export                | 60-80h | React Hook Form, Zod         |
+| **11-12** | **Polish & Pilot**   | Bug fixes, 2-3 CA onboarding                   | 40-60h | Testing, user feedback       |
+
+**Total: 340-480 hours** (~8-12 hours/day, 5 days/week for 12 weeks)
+
+### Solo Founder Budget (Bootstrap Mode)
+
+#### Month 1-3 Costs (₹10-15K/month)
+
+| Service             | Cost       | Free Tier                        | Your Usage          | Actual Cost          |
+|---------------------|------------|----------------------------------|---------------------|----------------------|
+| **AWS EC2/Fargate** | -          | 750h free (1 year)               | 1 t2.micro instance | ₹0 (free tier)       |
+| **MongoDB Atlas**   | -          | 512MB free forever               | Dev database        | ₹0 (free tier)       |
+| **AWS S3**          | -          | 5GB free (1 year)                | Document storage    | ₹0-500               |
+| **AWS Textract**    | ₹1.50/page | 1000 pages/month free (3 months) | 100-200 pages       | ₹0 (free tier)       |
+| **AWS Cognito**     | -          | 50K MAU free                     | <100 users          | ₹0 (free tier)       |
+| **Expo EAS**        | -          | 30 builds/month free             | Dev builds          | ₹0 (free tier)       |
+| **Firebase FCM**    | -          | 10M messages/month free          | Push notifications  | ₹0 (free tier)       |
+| **Domain**          | -          | -                                | chanakya.com        | ₹1,000/year          |
+| **SMS (optional)**  | ₹0.50/SMS  | -                                | 100 SMS/month       | ₹50-100              |
+| **Total**           |            |                                  |                     | **₹500-1,500/month** |
+
+**When You Get 5 Paying CAs (₹3K/month each):**
+- Revenue: ₹15,000/month
+- Costs: ₹1,500/month
+- **Profit: ₹13,500/month** (covers your living expenses!)
+
+### Solo Founder Milestones
+
+| Milestone                     | Week | Goal                                   | Success Criteria                   |
+|-------------------------------|------|----------------------------------------|------------------------------------|
+| **🏗️ Foundation Ready**      | 2    | Can login, upload document             | Auth works, S3 upload works        |
+| **📸 Document Capture Works** | 4    | Mobile app captures & uploads invoices | OCR triggers, extracts GSTIN       |
+| **👀 CA Can View Documents**  | 6    | Web dashboard shows uploaded docs      | Approve/reject workflow            |
+| **📋 Basic GST Form**         | 8    | Can manually enter GSTR-1 data         | Export to Excel works              |
+| **🔔 Notifications Work**     | 10   | WhatsApp/SMS reminders sent            | Deadline alerts fire correctly     |
+| **🧪 Pilot Ready**            | 12   | 2-3 CAs agree to test                  | Onboarding complete, feedback loop |
+| **💰 First Paying Customer**  | 16   | 1 CA converts to paid                  | ₹3K/month recurring revenue        |
+| **📈 Validation**             | 20   | 5 CAs paying, using daily              | Product-market fit signals         |
+
+### Working with Claude Code (Solo Developer Strategy)
+
+#### What to Ask Claude Code to Build
+
+**✅ Claude Code Excels At:**
+1. **Boilerplate generation:**
+   - "Create Spring Boot REST API for document upload with JWT auth"
+   - "Build Expo login screen with AWS Amplify Cognito integration"
+   - "Generate MongoDB repository for Invoice entity with tenantId filtering"
+
+2. **Feature implementation:**
+   - "Implement AWS Textract integration to extract invoice data"
+   - "Build camera screen in Expo with document edge detection"
+   - "Create GSTR-1 form with React Hook Form and Zod validation"
+
+3. **Bug fixing:**
+   - "Fix CORS error in Spring Boot API"
+   - "Debug why Textract isn't extracting GSTIN correctly"
+   - "Resolve token refresh 401 error in Axios interceptor"
+
+4. **Testing:**
+   - "Write JUnit tests for invoice upload endpoint"
+   - "Create Jest tests for document list component"
+
+#### What YOU Should Focus On
+
+**🎯 Your Unique Value:**
+1. **Domain knowledge:**
+   - Understanding GST rules (you or your CA consultant)
+   - Knowing CA workflows and pain points
+   - Designing reconciliation logic
+
+2. **Product decisions:**
+   - Which features to build first
+   - How the user flow should work
+   - What to defer vs build now
+
+3. **Customer validation:**
+   - Talking to CAs (Claude can't do this!)
+   - Gathering feedback
+   - Iterating based on real usage
+
+4. **Business logic:**
+   - GST calculation rules
+   - Reconciliation algorithms
+   - Deadline logic
+
+### Solo Founder Success Checklist
+
+#### Before You Start (Week 0)
+
+- [ ] Find 1-2 CA friends willing to pilot (without this, don't start!)
+- [ ] Set up AWS account with billing alerts (₹10K limit)
+- [ ] Install development tools (IntelliJ, VS Code, Docker, Expo Go)
+- [ ] Create GitHub account + repository
+- [ ] Block calendar: 8-10 hours/day for 12 weeks (this is a sprint!)
+
+#### Every Week
+
+- [ ] Ship something visible (screenshot-able progress)
+- [ ] Show CA partners weekly (even if buggy)
+- [ ] Ask Claude Code for code reviews ("Is this secure? Can it scale?")
+- [ ] Commit to GitHub daily (don't lose work!)
+- [ ] Take breaks (burnout kills solo projects)
+
+#### Red Flags to Watch
+
+- 🚩 **Week 4 and no working document upload** → Simplify scope
+- 🚩 **Week 8 and CA partners haven't seen demo** → Re-engage them
+- 🚩 **Week 10 and CAs say "this isn't useful"** → Pivot or stop
+- 🚩 **Spending >₹20K/month on AWS** → Check for runaway costs
+- 🚩 **Working 7 days/week, 14 hours/day** → Unsustainable, reduce scope
+
+### When to Scale Beyond Solo
+
+**Don't hire until:**
+1. ✅ 10+ CAs paying ₹3K/month (₹30K MRR)
+2. ✅ 6 months of consistent usage (not just signups)
+3. ✅ Clear feature backlog from customer requests
+4. ✅ You're bottleneck (customers waiting for features)
+
+**First hire:**
+- **Junior developer** (₹30-40K/month) to handle bug fixes
+- **Part-time CA consultant** (₹10-15K/month) for domain expertise
+- NOT full-time team (too risky, too expensive)
+
+---
+
 ### Phase 0: Foundation & Infrastructure (Weeks 1-2)
 
 **✅ Milestone:** Technical Foundation Ready
