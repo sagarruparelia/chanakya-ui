@@ -1,4 +1,11 @@
-# Project Scope
+# Project Scope - Chanakya GST Compliance Platform
+
+> **Strategy:** Validation-Driven Development with Phase Gates
+> **Approach:** Solo Founder MVP → Validate → Scale
+> **Timeline:** 16 weeks to first paying customer
+> **Last Updated:** January 2025
+
+---
 
 ## Core Problem Statement (Research-Validated)
 
@@ -15,1185 +22,990 @@ Small CA firms (2-5 employees, 20-30 clients) are drowning in operational chaos:
 ## Primary Success Metrics
 
 - ✅ Reduce monthly GST compliance time from **11-18 hours → 2 hours** per client
-- ✅ Reduce payment collection cycle from **45-90 days → 15-30 days**
 - ✅ Achieve **95%+ document collection** before deadline-5 days
-- ✅ Automate **80% of data entry** through OCR and integrations
+- ✅ Automate **80% of data entry** through OCR
 - ✅ Enable CA firms to handle **2x clients** with same team size
 
 ---
 
-## Target Customer Validation
+## Solo Founder Validation-Driven Roadmap
 
-| Customer Type            | Details                                                         |
-|--------------------------|-----------------------------------------------------------------|
-| **Initial CA Partner**   | 2 CAs, 5 support staff, 20-30 clients                           |
-| **Gujarat Builder**      | Monthly invoices 500+, multi-tier subcontractors                |
-| **Pain Point Alignment** | Both face document chaos, payment delays, reconciliation burden |
+### **Philosophy: Build → Validate → Scale (or Pivot)**
 
----
-
-## Technology Stack
-
-### 🔧 Backend Stack
-
-| Component         | Technology                    | Version | Purpose                          |
-|-------------------|-------------------------------|---------|----------------------------------|
-| **Runtime**       | Java                          | 21 LTS  | Primary backend language         |
-| **Framework**     | Spring Boot                   | 3.5.x   | REST API & business logic        |
-| **Security**      | Spring Security + AWS Cognito | Latest  | Authentication & authorization   |
-| **Database**      | MongoDB Atlas                 | Latest  | Primary database (NoSQL)         |
-| **API Gateway**   | AWS API Gateway               | -       | API management & OIDC            |
-| **File Storage**  | AWS S3                        | -       | Document storage                 |
-| **OCR Engine**    | AWS Textract                  | -       | Invoice & document processing    |
-| **Cache**         | Redis (ElastiCache)           | Latest  | Session & data caching           |
-| **Message Queue** | AWS SQS                       | -       | Async processing & GST API retry |
-
-### 🎨 Frontend Stack (Unified Web + Mobile with Expo)
-
-| Component            | Technology                      | Version | Purpose                                      |
-|----------------------|---------------------------------|---------|----------------------------------------------|
-| **Framework**        | Expo                            | SDK 52+ | **Unified codebase: Web + iOS + Android**    |
-| **UI Library**       | React Native                    | Latest  | Cross-platform UI components                 |
-| **Web Deployment**   | Expo Web (Static Export)        | Latest  | PWA + responsive web app → S3 + CloudFront   |
-| **Mobile Build**     | EAS Build                       | Latest  | iOS (App Store) + Android (Google Play)      |
-| **State Management** | Zustand + React Query           | Latest  | Global state + server state management       |
-| **API Client**       | Axios                           | Latest  | HTTP client with interceptors                |
-| **Forms**            | React Hook Form + Zod           | Latest  | Form validation & schema validation          |
-| **UI Components**    | React Native Paper / NativeBase | Latest  | Pre-built UI components                      |
-| **Navigation**       | Expo Router                     | Latest  | File-based routing (works on all platforms)  |
-| **Camera/Scanner**   | expo-camera + document scanner  | Latest  | Mobile document scanning with edge detection |
-| **Offline Storage**  | WatermelonDB                    | Latest  | Offline-first database for mobile            |
-| **Notifications**    | Firebase Cloud Messaging        | Latest  | Push notifications (iOS + Android)           |
-| **Auth**             | AWS Amplify                     | Latest  | Cognito integration (all platforms)          |
-
-**Code Sharing:** 80-90% codebase shared across web, iOS, and Android platforms
-
-### ☁️ AWS Infrastructure & Security
-
-| Service             | Purpose                                      |
-|---------------------|----------------------------------------------|
-| **AWS Cognito**     | User authentication, multi-tenant user pools |
-| **AWS S3**          | Document storage with encryption at rest     |
-| **AWS Textract**    | OCR processing for invoices & documents      |
-| **AWS Lambda**      | Serverless functions for OCR processing      |
-| **AWS API Gateway** | API management, throttling, OIDC integration |
-| **AWS CloudWatch**  | Logging, monitoring, and alerting            |
-| **AWS SQS**         | Message queuing for GST API retry logic      |
-| **AWS ElastiCache** | Redis cache for session management           |
-| **AWS VPC**         | Network isolation & security                 |
-| **AWS KMS**         | Encryption key management                    |
-| **AWS CloudFront**  | CDN for web app static assets                |
-| **AWS Route 53**    | DNS management                               |
-| **AWS ECS Fargate** | Container orchestration for Spring Boot      |
-| **AWS ECR**         | Docker container registry                    |
-
-### 🔄 DevOps & CI/CD
-
-| Component                   | Technology               | Purpose                       |
-|-----------------------------|--------------------------|-------------------------------|
-| **SCM**                     | GitHub                   | Source code management        |
-| **CI/CD**                   | GitHub Actions           | Automated build, test, deploy |
-| **Container Registry**      | AWS ECR                  | Docker image storage          |
-| **Container Orchestration** | AWS ECS / Fargate        | Container deployment          |
-| **Infrastructure as Code**  | Terraform / AWS CDK      | Infrastructure automation     |
-| **Secrets Management**      | AWS Secrets Manager      | API keys & credentials        |
-| **Monitoring**              | AWS CloudWatch + DataDog | Application monitoring        |
-| **Error Tracking**          | Sentry                   | Error tracking & debugging    |
-
-### 🔌 External Integrations
-
-| Integration               | Purpose                            | Provider        |
-|---------------------------|------------------------------------|-----------------|
-| **WhatsApp Business API** | Document collection, notifications | Meta / Twilio   |
-| **GST Portal API**        | GSTR-2A/2B fetch, filing           | GSTN            |
-| **Tally Integration**     | Accounting data sync               | Tally Solutions |
-| **Payment Gateway**       | Payment collection                 | Razorpay / PayU |
-| **SMS Gateway**           | Payment reminders                  | AWS SNS / MSG91 |
-| **Email Service**         | Notifications                      | AWS SES         |
-
-### 🧪 Testing & Quality
-
-| Tool                             | Purpose                          |
-|----------------------------------|----------------------------------|
-| **JUnit 5**                      | Backend unit testing             |
-| **Mockito**                      | Mocking framework                |
-| **TestContainers**               | Integration testing with MongoDB |
-| **Jest**                         | Frontend unit testing            |
-| **React Native Testing Library** | Component testing                |
-| **Detox**                        | E2E testing for mobile           |
-| **Postman / Newman**             | API testing                      |
-| **SonarQube**                    | Code quality analysis            |
-
-### 📊 Analytics & Reporting
-
-| Tool                     | Purpose                            |
-|--------------------------|------------------------------------|
-| **AWS QuickSight**       | Business intelligence & dashboards |
-| **Mixpanel / Amplitude** | User analytics                     |
-| **Google Analytics**     | Web analytics                      |
-
-### 🛠️ Development Tools
-
-| Tool                | Purpose                        |
-|---------------------|--------------------------------|
-| **IntelliJ IDEA**   | Backend development IDE        |
-| **VS Code**         | Frontend development IDE       |
-| **Postman**         | API testing & documentation    |
-| **MongoDB Compass** | Database management            |
-| **Docker Desktop**  | Local containerization         |
-| **Expo Go**         | Mobile app testing             |
-| **EAS CLI**         | Expo build & deployment        |
-| **Expo Dev Client** | Custom development environment |
-
----
-
-## 🔐 Security Architecture
-
-### Authentication & Authorization Flow
+Each phase has a **VALIDATION CHECKPOINT**. You only proceed to the next phase if validation succeeds.
 
 ```
-User (Web/Mobile)
-      ↓
-AWS Cognito (Login)
-      ↓
-JWT Tokens (Access + Refresh + ID)
-      ↓
-Expo App (Token Storage: Memory + httpOnly Cookie)
-      ↓
-API Request → Authorization: Bearer <JWT>
-      ↓
-AWS API Gateway (Optional: Rate limiting, validation)
-      ↓
-Spring Boot (JWT Validation + Authorization)
-      ↓
-Multi-Tenant Data Access (Tenant Isolation)
+Phase 0 (Week 0)    → VALIDATE: Problem + CA commitment
+Phase 1 (Week 1-4)  → VALIDATE: Technical feasibility
+Phase 2 (Week 5-8)  → VALIDATE: Core value (OCR works)
+Phase 3 (Week 9-12) → VALIDATE: Daily usage by 2-3 CAs
+Phase 4 (Week 13-16)→ VALIDATE: Willingness to pay
+Phase 5+ (Week 17+) → SCALE: Only if all validations pass
 ```
 
-### 1️⃣ Authentication (AWS Cognito)
+---
 
-| Component             | Implementation                          |
-|-----------------------|-----------------------------------------|
-| **Provider**          | AWS Cognito User Pools                  |
-| **Method**            | OAuth 2.0 / OIDC (Hosted UI or custom)  |
-| **MFA**               | SMS, TOTP, Email (optional)             |
-| **User Groups**       | CA_ADMIN, CA_STAFF, CLIENT              |
-| **Custom Attributes** | tenantId (CA firm ID for multi-tenancy) |
-| **Integration**       | AWS Amplify in Expo app                 |
+## Phase 0: Pre-Development Validation (Week 0)
 
-### 2️⃣ Token Management
+### Objective
 
-| Token Type             | Purpose             | Lifetime | Storage                 |
-|------------------------|---------------------|----------|-------------------------|
-| **Access Token (JWT)** | API authorization   | 1 hour   | In-memory (React state) |
-| **Refresh Token**      | Renew access tokens | 30 days  | httpOnly secure cookie  |
-| **ID Token (JWT)**     | User identity info  | 1 hour   | Optional (memory)       |
+**Validate that the problem is real and CAs will actually use your solution.**
 
-**Token Storage Strategy:**
+### Tasks (40 hours)
 
-- ✅ Access token in **memory** (React Context) - protected from XSS
-- ✅ Refresh token in **httpOnly, Secure, SameSite=Strict cookie** - protected from XSS + CSRF
-- ❌ **Never use localStorage** - vulnerable to XSS attacks
+| Task                               | Time | Deliverable                             | Success Criteria                         |
+|------------------------------------|------|-----------------------------------------|------------------------------------------|
+| Find 3-5 CA firms willing to pilot | 10h  | List of committed CAs with contact info | At least 2 CAs say "yes, we'll test it"  |
+| Shadow CA workflow for GST filing  | 8h   | Process documentation with screenshots  | Understand current pain points           |
+| Document GST reconciliation logic  | 8h   | GST_DOMAIN_LOGIC.md with matching rules | CA validates: "Yes, this is how we work" |
+| Create clickable mockups (Figma)   | 8h   | 5-10 screen mockups                     | CA says: "This would solve our problem"  |
+| Define MVP scope with CAs          | 4h   | Prioritized feature list (top 5)        | Agreement on what to build first         |
+| Set up development environment     | 2h   | AWS account, GitHub repo, local setup   | Can run "Hello World"                    |
 
-**Token Refresh:**
+### Validation Checkpoint ✅
 
-- Axios interceptor auto-refreshes tokens before expiration
-- On 401 response: attempt refresh, retry request
-- On refresh failure: redirect to login
+**GO Decision (Proceed to Phase 1):**
 
-### 3️⃣ Backend Security (Spring Boot)
+- [ ] 2+ CAs committed to pilot (written/verbal agreement)
+- [ ] CA confirmed: "If you build X, we'll use it daily"
+- [ ] You have test dataset: 20 real anonymized invoices
+- [ ] CA agrees to weekly feedback calls
 
-**Spring Security Configuration:**
+**NO-GO Decision (Pivot or Stop):**
 
-```yaml
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://cognito-idp.ap-south-1.amazonaws.com/{userPoolId}
-```
+- ❌ Less than 2 CA commitments → Find more CAs or reconsider
+- ❌ CAs say "nice to have, not must-have" → Wrong problem
+- ❌ CA's actual workflow doesn't match your assumptions → Redesign
 
-**JWT Validation Process:**
+### Budget
 
-1. Extract JWT from `Authorization: Bearer` header
-2. Fetch Cognito public keys (JWKS endpoint, cached)
-3. Verify JWT signature with public key
-4. Check token expiration (`exp` claim)
-5. Validate issuer (Cognito user pool)
-6. Extract claims: `sub`, `cognito:groups`, `custom:tenantId`
-
-**Authorization Methods:**
-
-- `@PreAuthorize("hasRole('CA_ADMIN')")` - method-level security
-- Role-based access control (RBAC)
-- Tenant-scoped data access (all queries filtered by tenantId)
-
-### 4️⃣ Multi-Tenancy Security (CRITICAL)
-
-**Tenant Isolation Strategy:**
-
-Every API request must be scoped to the authenticated tenant to prevent data leakage.
-
-**Implementation:**
-
-```java
-// 1. Extract tenantId from JWT custom claim
-// 2. Store in ThreadLocal context for request scope
-// 3. Apply tenant filter to ALL MongoDB queries
-// 4. Validate tenant ownership before updates/deletes
-```
-
-**MongoDB Schema:**
-
-```json
-{
-  "_id": "invoice_123",
-  "tenantId": "ca-firm-abc",
-  // ← Required on every document
-  "clientId": "client_456",
-  "amount": 10000,
-  ...
-}
-```
-
-**Security Measures:**
-
-- ✅ Compound indexes: `{tenantId: 1, clientId: 1}`
-- ✅ Application-level filtering (never trust user input)
-- ✅ Tenant context propagation in async jobs (SQS)
-- ✅ Validation: Users can only access their tenant's data
-
-### 5️⃣ API Security
-
-| Security Layer         | Implementation                                     |
-|------------------------|----------------------------------------------------|
-| **HTTPS**              | TLS 1.2+ only (AWS CloudFront + API Gateway)       |
-| **CORS**               | Restricted origins (production domain + localhost) |
-| **Rate Limiting**      | API Gateway: 1000 req/sec per tenant               |
-| **Request Validation** | API Gateway request/response validation            |
-| **Input Sanitization** | Spring validators + MongoDB parameterized queries  |
-
-### 6️⃣ Protection Against Common Attacks
-
-#### XSS (Cross-Site Scripting)
-
-- ✅ React/Expo escapes output by default
-- ✅ Content Security Policy (CSP) headers
-- ❌ Never use `dangerouslySetInnerHTML` with user input
-- ✅ DOMPurify for rich text (if needed)
-
-#### CSRF (Cross-Site Request Forgery)
-
-- ✅ JWT in Authorization header (not cookies) → immune to CSRF
-- ✅ SameSite=Strict on refresh token cookie
-- ✅ Stateless API → no CSRF vulnerability
-
-#### SQL/NoSQL Injection
-
-- ✅ Parameterized queries (Spring Data MongoDB)
-- ❌ Never string concatenation in queries
-- ✅ Input validation (Zod schemas)
-
-#### Data Exposure
-
-- ✅ Tenant isolation on every query
-- ✅ Field-level access control (hide sensitive fields)
-- ✅ Audit logging (who accessed what, when)
-
-### 7️⃣ Audit Logging
-
-**Requirements:**
-
-- Log all data modifications (create, update, delete)
-- Log authentication events (login, logout, token refresh)
-- Log authorization failures (403, 401)
-- Retention: 7 years (Indian tax compliance)
-
-**Implementation:**
-
-- Spring AOP aspects (`@Audited` annotation)
-- CloudWatch Logs (searchable, alerts)
-- Separate audit collection in MongoDB
-
-### 8️⃣ Data Encryption
-
-| Layer                 | Encryption                      |
-|-----------------------|---------------------------------|
-| **In Transit**        | TLS 1.2+ (HTTPS everywhere)     |
-| **At Rest (S3)**      | AES-256 (AWS managed keys)      |
-| **At Rest (MongoDB)** | Atlas encryption (AWS KMS keys) |
-| **Backups**           | Encrypted snapshots             |
-
-### 9️⃣ Security Checklist
-
-| Security Measure                      | Priority | Status                       |
-|---------------------------------------|----------|------------------------------|
-| AWS Cognito authentication            | Critical | ✅ Phase 0                    |
-| JWT validation in Spring Boot         | Critical | ✅ Phase 0                    |
-| HTTPS only (TLS 1.2+)                 | Critical | ✅ Phase 0                    |
-| Tenant isolation (multi-tenancy)      | Critical | ✅ Phase 1                    |
-| Token in memory (not localStorage)    | Critical | ✅ Phase 1                    |
-| httpOnly cookies for refresh tokens   | Critical | ✅ Phase 1                    |
-| CORS configuration                    | Critical | ✅ Phase 1                    |
-| Role-based authorization              | Critical | ✅ Phase 1                    |
-| Rate limiting (API Gateway)           | High     | ✅ Phase 1                    |
-| Audit logging                         | High     | ✅ Phase 2                    |
-| MongoDB encryption at rest            | High     | ✅ Phase 0                    |
-| Content Security Policy (CSP)         | High     | ✅ Phase 2                    |
-| Input validation (Zod)                | High     | ✅ Phase 1                    |
-| MongoDB compound indexes              | High     | ✅ Phase 1                    |
-| VAPT testing                          | High     | Phase 3, then every 6 months |
-| Secret rotation (AWS Secrets Manager) | Medium   | Quarterly                    |
-| WAF (Web Application Firewall)        | Medium   | ✅ Phase 2                    |
-| DDoS protection (CloudFront)          | Medium   | ✅ Phase 0 (AWS Shield)       |
-
-### 🔟 Security Cost Impact
-
-| Service             | Purpose                       | Monthly Cost  |
-|---------------------|-------------------------------|---------------|
-| AWS Cognito         | Authentication (50K MAU free) | ₹0-5,000      |
-| AWS KMS             | Encryption keys               | ₹1,000-2,000  |
-| AWS WAF             | Web application firewall      | ₹5,000-10,000 |
-| AWS Shield Standard | DDoS protection               | Free          |
-| VAPT Audit          | Security testing (twice/year) | ₹25,000/audit |
-| SSL Certificate     | HTTPS (AWS ACM)               | Free          |
+- **Cost:** ₹0 (time investment only)
+- **Risk:** Low (1 week, no financial commitment)
 
 ---
 
-## Revised Project Plan with Timeline
+## Phase 1: Technical Foundation (Weeks 1-4)
 
-> ⚠️ **Timeline Note:** The 26-week timeline is aggressive and assumes parallel development, experienced team, and
-> minimal scope changes. A more realistic timeline for the full scope would be **40-45 weeks**. Consider MVP scope
-> reduction (focus on Phases 0-2 only for first release: document upload, OCR, reconciliation, basic GST filing).
+### Objective
 
----
+**Validate that you can build the technical infrastructure and CAs can login + upload documents.**
 
-## 🚀 Solo Founder Track (Recommended for Individual Developers)
+### MVP Tech Stack (Simplified)
 
-> **Context:** If you're building this solo (founder + Claude Code as development assistant), the full 26-week plan is unrealistic. This section provides a **lean, validated approach** for solo founders.
+#### Backend (Essential Only)
 
-### Solo Founder Reality
+| Component | Technology              | Why This?                   | When to Add Complexity      |
+|-----------|-------------------------|-----------------------------|-----------------------------|
+| Runtime   | Java 21                 | Spring Boot ecosystem       | -                           |
+| Framework | Spring Boot 3.5         | Rapid API development       | -                           |
+| Auth      | AWS Cognito             | Managed auth, JWT tokens    | -                           |
+| Database  | MongoDB Atlas M0 (Free) | Document storage, free tier | Upgrade to M10 at 50+ users |
+| Storage   | AWS S3                  | Document storage            | -                           |
+| OCR       | AWS Textract            | Invoice data extraction     | -                           |
 
-| Aspect                   | Full Team Plan                                   | Solo Founder Reality                   | Adjustment                |
-|--------------------------|--------------------------------------------------|----------------------------------------|---------------------------|
-| **Team Size**            | 5 people (Backend, Frontend, DevOps, PM, CA)     | 1 person + AI assistant                | Focus only on essentials  |
-| **Development Capacity** | 260 person-weeks (26 weeks × 5 people × 2 weeks) | 26 person-weeks                        | **Build 10% of features** |
-| **Timeline to MVP**      | 26 weeks (aggressive)                            | **12 weeks** (realistic)               | Ruthless prioritization   |
-| **Budget**               | ₹8.5-11.5L/month (team + tech)                   | **₹10K/month** (tech only, free tiers) | Bootstrap mode            |
-| **Initial Customers**    | 20 CAs by Week 26                                | **2-3 CAs by Week 12**                 | Validation-focused        |
+**Deliberately EXCLUDED for MVP:**
 
-### Solo MVP Scope (12 Weeks)
+- ❌ API Gateway (Spring Boot handles requests directly)
+- ❌ Redis/ElastiCache (no caching needs yet)
+- ❌ SQS/Lambda (call Textract synchronously)
+- ❌ Load Balancer (single instance handles <100 users)
 
-**Focus:** Solve ONE problem exceptionally well - **Document Collection Chaos**
+#### Frontend (Unified)
 
-#### What to Build (Must-Have)
+| Component  | Technology            | Why This?                         |
+|------------|-----------------------|-----------------------------------|
+| Framework  | Expo SDK 54+          | Web + Mobile from single codebase |
+| UI         | React Native Paper    | Pre-built components              |
+| State      | React Query           | Server state caching              |
+| Forms      | React Hook Form + Zod | Validation                        |
+| Navigation | Expo Router           | File-based routing                |
+| Camera     | expo-camera           | Document capture                  |
+
+**Deliberately EXCLUDED for MVP:**
+
+- ❌ WatermelonDB (no offline needs for CA staff)
+- ❌ Zustand (React Query is enough)
+- ❌ Advanced animations (ship ugly but functional)
+
+### Week-by-Week Plan
+
+#### **Week 1: Authentication & Setup**
 
 ```
-Phase 1: Foundation (Week 1-2)
-├── AWS setup (Cognito, S3, Textract)
-├── Spring Boot API (minimal endpoints)
-├── Expo mobile app (document capture)
-└── Basic authentication
+Backend:
+├── Spring Boot project scaffold
+├── AWS Cognito user pool setup
+├── JWT validation filter
+├── MongoDB connection
+└── Health check endpoint
 
-Phase 2: Core Feature (Week 3-6)
-├── Mobile camera document scanning
-├── OCR processing (AWS Textract)
-├── Document categorization
-├── Basic web view for CA staff
-└── Document approval workflow
+Frontend:
+├── Expo project with TypeScript
+├── Login screen (email + password)
+├── AWS Amplify Cognito integration
+└── Protected navigation
 
-Phase 3: Validation (Week 7-10)
-├── GSTR-1 form (manual entry)
-├── Basic deadline reminders
-├── Export to Excel/PDF
-└── WhatsApp notifications
-
-Phase 4: Pilot (Week 11-12)
-├── Bug fixes
-├── Polish UX
-├── Onboard 2-3 CA partners
-└── Collect feedback
+Test: User can signup, login, see empty dashboard
+Time: 50-60 hours (10-12 hours/day, 5 days)
 ```
 
-#### What to DEFER (Build After Validation)
-
-- ❌ **Reconciliation engine** (Week 13-20) - Build after CAs confirm they need it
-- ❌ **Tally integration** (Week 21-26) - Complex, need CA partner buy-in first
-- ❌ **Payment tracking** (Week 27-30) - Secondary problem
-- ❌ **Construction module** (Week 31-35) - Niche, validate market first
-- ❌ **AI features** (Week 36+) - Need training data from real usage
-- ❌ **Advanced analytics** (Week 36+) - Nice-to-have
-
-### Solo Founder Timeline (12-Week MVP)
-
-| Week      | Focus                | Key Deliverables                               | Hours  | Tools                        |
-|-----------|----------------------|------------------------------------------------|--------|------------------------------|
-| **1-2**   | **Setup & Auth**     | AWS config, project scaffolds, login           | 60-80h | Claude Code, AWS Console     |
-| **3-4**   | **Document Capture** | Mobile camera, upload, OCR trigger             | 60-80h | Expo, expo-camera            |
-| **5-6**   | **OCR Processing**   | Textract integration, data extraction, display | 60-80h | AWS SDK, Spring Boot         |
-| **7-8**   | **Web Dashboard**    | CA staff view, document approval               | 60-80h | Expo Web, React Native Paper |
-| **9-10**  | **GST Forms**        | GSTR-1 basic form, Excel export                | 60-80h | React Hook Form, Zod         |
-| **11-12** | **Polish & Pilot**   | Bug fixes, 2-3 CA onboarding                   | 40-60h | Testing, user feedback       |
-
-**Total: 340-480 hours** (~8-12 hours/day, 5 days/week for 12 weeks)
-
-### Solo Founder Budget (Bootstrap Mode)
-
-#### Month 1-3 Costs (₹10-15K/month)
-
-| Service             | Cost       | Free Tier                        | Your Usage          | Actual Cost          |
-|---------------------|------------|----------------------------------|---------------------|----------------------|
-| **AWS EC2/Fargate** | -          | 750h free (1 year)               | 1 t2.micro instance | ₹0 (free tier)       |
-| **MongoDB Atlas**   | -          | 512MB free forever               | Dev database        | ₹0 (free tier)       |
-| **AWS S3**          | -          | 5GB free (1 year)                | Document storage    | ₹0-500               |
-| **AWS Textract**    | ₹1.50/page | 1000 pages/month free (3 months) | 100-200 pages       | ₹0 (free tier)       |
-| **AWS Cognito**     | -          | 50K MAU free                     | <100 users          | ₹0 (free tier)       |
-| **Expo EAS**        | -          | 30 builds/month free             | Dev builds          | ₹0 (free tier)       |
-| **Firebase FCM**    | -          | 10M messages/month free          | Push notifications  | ₹0 (free tier)       |
-| **Domain**          | -          | -                                | chanakya.com        | ₹1,000/year          |
-| **SMS (optional)**  | ₹0.50/SMS  | -                                | 100 SMS/month       | ₹50-100              |
-| **Total**           |            |                                  |                     | **₹500-1,500/month** |
-
-**When You Get 5 Paying CAs (₹3K/month each):**
-- Revenue: ₹15,000/month
-- Costs: ₹1,500/month
-- **Profit: ₹13,500/month** (covers your living expenses!)
-
-### Solo Founder Milestones
-
-| Milestone                     | Week | Goal                                   | Success Criteria                   |
-|-------------------------------|------|----------------------------------------|------------------------------------|
-| **🏗️ Foundation Ready**      | 2    | Can login, upload document             | Auth works, S3 upload works        |
-| **📸 Document Capture Works** | 4    | Mobile app captures & uploads invoices | OCR triggers, extracts GSTIN       |
-| **👀 CA Can View Documents**  | 6    | Web dashboard shows uploaded docs      | Approve/reject workflow            |
-| **📋 Basic GST Form**         | 8    | Can manually enter GSTR-1 data         | Export to Excel works              |
-| **🔔 Notifications Work**     | 10   | WhatsApp/SMS reminders sent            | Deadline alerts fire correctly     |
-| **🧪 Pilot Ready**            | 12   | 2-3 CAs agree to test                  | Onboarding complete, feedback loop |
-| **💰 First Paying Customer**  | 16   | 1 CA converts to paid                  | ₹3K/month recurring revenue        |
-| **📈 Validation**             | 20   | 5 CAs paying, using daily              | Product-market fit signals         |
-
-### Working with Claude Code (Solo Developer Strategy)
-
-#### What to Ask Claude Code to Build
-
-**✅ Claude Code Excels At:**
-1. **Boilerplate generation:**
-   - "Create Spring Boot REST API for document upload with JWT auth"
-   - "Build Expo login screen with AWS Amplify Cognito integration"
-   - "Generate MongoDB repository for Invoice entity with tenantId filtering"
-
-2. **Feature implementation:**
-   - "Implement AWS Textract integration to extract invoice data"
-   - "Build camera screen in Expo with document edge detection"
-   - "Create GSTR-1 form with React Hook Form and Zod validation"
-
-3. **Bug fixing:**
-   - "Fix CORS error in Spring Boot API"
-   - "Debug why Textract isn't extracting GSTIN correctly"
-   - "Resolve token refresh 401 error in Axios interceptor"
-
-4. **Testing:**
-   - "Write JUnit tests for invoice upload endpoint"
-   - "Create Jest tests for document list component"
-
-#### What YOU Should Focus On
-
-**🎯 Your Unique Value:**
-1. **Domain knowledge:**
-   - Understanding GST rules (you or your CA consultant)
-   - Knowing CA workflows and pain points
-   - Designing reconciliation logic
-
-2. **Product decisions:**
-   - Which features to build first
-   - How the user flow should work
-   - What to defer vs build now
-
-3. **Customer validation:**
-   - Talking to CAs (Claude can't do this!)
-   - Gathering feedback
-   - Iterating based on real usage
-
-4. **Business logic:**
-   - GST calculation rules
-   - Reconciliation algorithms
-   - Deadline logic
-
-### Solo Founder Success Checklist
-
-#### Before You Start (Week 0)
-
-- [ ] Find 1-2 CA friends willing to pilot (without this, don't start!)
-- [ ] Set up AWS account with billing alerts (₹10K limit)
-- [ ] Install development tools (IntelliJ, VS Code, Docker, Expo Go)
-- [ ] Create GitHub account + repository
-- [ ] Block calendar: 8-10 hours/day for 12 weeks (this is a sprint!)
-
-#### Every Week
-
-- [ ] Ship something visible (screenshot-able progress)
-- [ ] Show CA partners weekly (even if buggy)
-- [ ] Ask Claude Code for code reviews ("Is this secure? Can it scale?")
-- [ ] Commit to GitHub daily (don't lose work!)
-- [ ] Take breaks (burnout kills solo projects)
-
-#### Red Flags to Watch
-
-- 🚩 **Week 4 and no working document upload** → Simplify scope
-- 🚩 **Week 8 and CA partners haven't seen demo** → Re-engage them
-- 🚩 **Week 10 and CAs say "this isn't useful"** → Pivot or stop
-- 🚩 **Spending >₹20K/month on AWS** → Check for runaway costs
-- 🚩 **Working 7 days/week, 14 hours/day** → Unsustainable, reduce scope
-
-### When to Scale Beyond Solo
-
-**Don't hire until:**
-1. ✅ 10+ CAs paying ₹3K/month (₹30K MRR)
-2. ✅ 6 months of consistent usage (not just signups)
-3. ✅ Clear feature backlog from customer requests
-4. ✅ You're bottleneck (customers waiting for features)
-
-**First hire:**
-- **Junior developer** (₹30-40K/month) to handle bug fixes
-- **Part-time CA consultant** (₹10-15K/month) for domain expertise
-- NOT full-time team (too risky, too expensive)
-
----
-
-### Phase 0: Foundation & Infrastructure (Weeks 1-2)
-
-**✅ Milestone:** Technical Foundation Ready
-
-#### Week 1: Core Infrastructure
-
-- AWS account setup (Mumbai region for data residency)
-- AWS Cognito configuration for multi-tenant architecture
-- MongoDB Atlas setup with encryption
-- AWS S3 configuration for document storage
-- AWS Textract setup for OCR capabilities
-- GitHub repository setup with branch protection
-- CI/CD pipeline with GitHub Actions
-
-#### Week 2: Development Environment
-
-- Spring Boot 3.5 project scaffold with Java 21
-- Expo project setup (web + mobile)
-- API Gateway configuration with OIDC
-- Development, staging, production environments
-- Logging and monitoring setup (CloudWatch)
-- Docker containerization setup
-
----
-
-### Phase 1: MVP Core - Pain Point Killers (Weeks 3-8)
-
-**✅ Milestone:** Alpha Release - Core Problem Solvers
-
-#### Week 3-4: Smart Document Management
-
-**Addresses:** Document collection chaos, 7-10 day deadline crunch
-
-- Document upload via web, mobile, WhatsApp integration
-- **OCR Engine using AWS Textract:**
-    - Invoice capture from mobile photos
-    - Auto-extraction: GSTIN, invoice number, date, amount, HSN codes
-    - Confidence scoring and manual verification UI
-- Document categorization (sales/purchase/expense)
-- Deadline-based document request system
-- Missing document alerts
-
-#### Week 5-6: CA Billing & Payment Tracking
-
-**Addresses:** 45-90 day payment delays, cash flow crisis
-
-- **CA Firm Invoice Generation:**
-    - Service-based billing with GST toggle per client
-    - Retainer + variable fee models
-    - Bulk invoice generation
-
-- **Payment Tracking System:**
-    - Payment status: Pending → Client Marked Paid → CA Verified → Received
-    - Outstanding receivables dashboard
-    - Aging analysis (30/60/90+ days)
-
-- **Smart Payment Reminders:**
-    - Automated WhatsApp/SMS reminders at intervals
-    - Escalation workflows
-    - Manual reminder triggers
-
-- Payment receipt upload by clients
-- Bank reconciliation for payment verification
-
-#### Week 7-8: Rapid Data Entry & Basic GST
-
-**Addresses:** 40% time on manual data entry
-
-- Excel/CSV bulk upload with validation
-- GSTR-1 and GSTR-3B preparation forms
-- Basic reconciliation dashboard
-- Data validation rules
-- Error highlighting and correction workflow
-
----
-
-### Phase 2: Reconciliation & Automation (Weeks 9-14)
-
-**✅ Milestone:** Beta Launch - Efficiency Multipliers
-
-#### Week 9-10: Intelligent Reconciliation Engine
-
-**Addresses:** 70% time spent organizing reconciliation data
-
-- GSTR-2A/2B auto-fetch via GST API (sandbox)
-- **Three-way matching algorithm:**
-    - Books vs GSTR-2A/2B vs GSTR-3B
-    - Intelligent fuzzy matching for common errors
-- Mismatch identification and categorization
-- Bulk mismatch resolution tools
-- ITC eligibility calculator with Section 17(5) rules
-
-#### Week 11-12: Workflow Automation
-
-**Addresses:** Task management chaos, deadline stress
-
-- Task auto-assignment based on deadlines
-- Client-wise task tracking
-- Document request → Collection → Processing → Filing workflow
-- Escalation matrices for delays
-- Team workload balancing
-- Deadline countdown dashboards
-
-#### Week 13-14: Client Portal & Communication
-
-**Addresses:** WhatsApp scatter, client education gap
-
-- Self-service document upload portal
-- Real-time filing status visibility
-- Compliance scorecard for clients
-- Automated filing notifications
-- Educational content delivery
-- Mobile-responsive design
-
----
-
-### Phase 3: Construction Sector & Scale (Weeks 15-20)
-
-**✅ Milestone:** Production Launch - Sector Specialization
-
-#### Week 15-16: Construction/Real Estate Module
-
-**Addresses:** Sector-specific complexity
-
-- Multi-tier subcontractor management
-- Works contract classification wizard
-- ITC eligibility calculator for construction
-- Project-wise GSTIN tracking
-- Material rate classification (cement 28%, steel 18%, etc.)
-- Volume invoice processing (1000+ monthly)
-
-#### Week 17-18: Integration Layer
-
-**Addresses:** Data silos, manual re-entry
-
-- Tally Prime integration (critical for 70%+ market)
-- Bank statement auto-import
-- WhatsApp Business API for document collection
-- GSTN portal integration (production APIs)
-- Payment gateway integration (Razorpay/PayU)
-
-#### Week 19-20: Performance & Polish
-
-- Load testing for 50 concurrent users
-- OCR accuracy improvements
-- Bulk operations optimization
-- Mobile app deployment (React Native)
-- User training materials
-- Production hardening
-
----
-
-### Phase 4: Intelligence & Growth (Weeks 21-26)
-
-**✅ Milestone:** Version 1.0 - Market Ready
-
-#### Week 21-22: AI-Powered Features
-
-- Smart invoice categorization using ML
-- Anomaly detection in transactions
-- Predictive deadline alerts
-- Auto-suggestions for HSN codes
-- Natural language query for reports
-
-#### Week 23-24: Advanced Analytics
-
-- Client profitability analysis for CAs
-- ITC optimization recommendations
-- GST liability forecasting
-- Compliance health scores
-- Custom report builder
-
-#### Week 25-26: Scale Features
-
-- Multi-branch operations
-- Bulk client onboarding
-- Advanced approval workflows
-- Audit trail and compliance reports
-- WhatsApp bot for status queries
-
----
-
-## Updated Release & Deployment Plan
-
-### Release Strategy - Iterative Value Delivery
-
-#### 🚀 Release 0.1 (MVP Alpha) - Week 8
-
-**Theme:** "Pain Killer Features"
-
-| Aspect               | Details                                                                                                             |
-|----------------------|---------------------------------------------------------------------------------------------------------------------|
-| **Features**         | OCR document capture, CA billing, payment tracking, basic GST forms                                                 |
-| **Target Users**     | Internal testing + 1 CA partner (5 clients)                                                                         |
-| **Success Criteria** | • 90% OCR accuracy on printed invoices<br>• Payment reminder delivery success<br>• 50% reduction in data entry time |
-
-#### 🚀 Release 0.5 (Beta) - Week 14
-
-**Theme:** "Efficiency at Scale"
-
-| Aspect               | Details                                                                                                                            |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| **Features**         | Reconciliation engine, workflow automation, client portal                                                                          |
-| **Target Users**     | 2 CA partners + Gujarat builder                                                                                                    |
-| **Load**             | 30 clients, 500 invoices/month                                                                                                     |
-| **Success Criteria** | • Reconciliation in <30 minutes per client<br>• 80% documents collected before deadline-5<br>• Zero missed deadlines in test month |
-
-#### 🚀 Release 0.8 (Pilot) - Week 20
-
-**Theme:** "Production Readiness"
-
-| Aspect               | Details                                                                                                  |
-|----------------------|----------------------------------------------------------------------------------------------------------|
-| **Features**         | Construction module, Tally integration, WhatsApp automation                                              |
-| **Target Users**     | 5 CA firms, 50 clients total                                                                             |
-| **Success Criteria** | • Handle 1000+ invoices/client for construction<br>• 99.9% uptime for month<br>• <3 second response time |
-
-#### 🚀 Release 1.0 (GA) - Week 26
-
-**Theme:** "Market Launch"
-
-| Aspect               | Details                                                   |
-|----------------------|-----------------------------------------------------------|
-| **Features**         | Complete feature set with AI capabilities                 |
-| **Target Market**    | Open registration                                         |
-| **Capacity**         | 100+ concurrent users                                     |
-| **Success Criteria** | • 20 paying customers<br>• ₹2 lakh MRR<br>• NPS score >50 |
-
----
-
-### Deployment Architecture - Progressive Rollout
-
-#### Deployment Pipeline
+#### **Week 2: Document Upload (Mobile)**
 
 ```
-Development → UAT → Staging → Production
+Backend:
+├── POST /api/documents/upload endpoint
+├── S3 bucket with tenantId prefix
+├── Document metadata storage (MongoDB)
+└── Multipart file handling
+
+Frontend:
+├── Camera screen with expo-camera
+├── Image compression (80% quality)
+├── Upload progress indicator
+└── Success/error handling
+
+Test: Client can capture invoice photo and upload to S3
+Time: 50-60 hours
 ```
 
-**Frequency:**
+#### **Week 3: Document Management (Web)**
 
-- **Dev:** On every commit
-- **UAT:** Daily
-- **Staging:** Twice weekly
-- **Production:** Weekly (Thursday evening)
+```
+Backend:
+├── GET /api/documents (list with pagination)
+├── GET /api/documents/:id (detail)
+├── PUT /api/documents/:id (update status)
+└── Multi-tenancy filtering (tenantId in all queries)
 
-**Rollout Strategy:**
+Frontend (Expo Web):
+├── Dashboard with document list
+├── Document detail view (show image from S3)
+├── Approve/Reject workflow
+└── Basic filters (status, date)
 
-- 10% canary for 2 hours
-- 25% for 6 hours
-- 50% for 12 hours
-- 100% after 24 hours
+Test: CA staff can view uploaded documents on web
+Time: 50-60 hours
+```
 
-#### Feature Flags for Progressive Enablement
+#### **Week 4: User Management & Polish**
 
-- **OCR processing:** Start with structured documents → handwritten
-- **Reconciliation:** Simple matching → fuzzy logic → AI-powered
-- **Integrations:** Read-only → bi-directional sync
-- **WhatsApp:** Notifications → document collection → full bot
+```
+Backend:
+├── User roles (CA_ADMIN, CA_STAFF, CLIENT)
+├── Client entity CRUD
+├── User profile endpoints
+└── Basic authorization (@PreAuthorize)
+
+Frontend:
+├── Client list screen
+├── Add/Edit client form
+├── User profile screen
+└── Bug fixes & UI polish
+
+Test: CA can add clients, assign documents to clients
+Time: 40-50 hours
+```
+
+### Validation Checkpoint ✅
+
+**GO Decision (Proceed to Phase 2):**
+
+- [ ] 2 CA firms have successfully logged in
+- [ ] At least 10 documents uploaded via mobile camera
+- [ ] CA staff can view documents in web dashboard
+- [ ] No critical bugs in auth or upload flow
+- [ ] CA feedback: "This is working, keep going"
+
+**NO-GO Decision (Pivot or Fix):**
+
+- ❌ Upload fails >30% of the time → Fix reliability first
+- ❌ CA says "too complicated to use" → Simplify UX
+- ❌ Camera quality too poor on invoices → Add image quality checks
+- ❌ CA lost interest, not responding → Find new pilot partners
+
+### Budget (Month 1)
+
+| Service              | Usage                         | Cost             |
+|----------------------|-------------------------------|------------------|
+| AWS EC2 t2.micro     | 750h (free tier)              | ₹0               |
+| MongoDB Atlas M0     | 512MB shared                  | ₹0               |
+| AWS S3               | 5GB storage, 100 PUT requests | ₹0-100           |
+| AWS Cognito          | <50 MAU                       | ₹0               |
+| Domain (chanakya.in) | Annual                        | ₹1,000           |
+| **Total Month 1**    |                               | **₹1,000-1,100** |
+
+---
+
+## Phase 2: OCR & Core Value (Weeks 5-8)
+
+### Objective
+
+**Validate that OCR works well enough to save CA staff time on data entry.**
+
+### Week-by-Week Plan
+
+#### **Week 5: AWS Textract Integration**
+
+```
+Backend:
+├── POST /api/documents/:id/process (trigger OCR)
+├── AWS Textract API integration (synchronous)
+├── Basic text extraction (raw blocks)
+├── Store extracted text in MongoDB
+└── Confidence scores per field
+
+Frontend:
+├── "Process with OCR" button
+├── Processing status indicator
+├── Display raw extracted text
+└── Show confidence scores
+
+Test: Textract successfully extracts text from 80%+ invoices
+Time: 50-60 hours
+```
+
+#### **Week 6: Invoice Field Extraction**
+
+```
+Backend:
+├── Parse Textract response for key fields:
+│   ├── GSTIN (regex: \d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1})
+│   ├── Invoice number
+│   ├── Invoice date (multiple formats)
+│   ├── Total amount (₹ symbol, commas)
+│   └── Vendor/buyer name
+├── Field validation logic
+└── Manual override capability
+
+Frontend:
+├── Structured field display
+├── Edit extracted fields
+├── Validation errors (e.g., invalid GSTIN)
+└── Save corrected data
+
+Test: 70%+ of invoices have correct GSTIN extracted
+Time: 50-60 hours
+```
+
+#### **Week 7: OCR Accuracy Improvement**
+
+```
+Backend:
+├── Add pre-processing hints to Textract
+├── Handle rotated/skewed images
+├── Fallback logic for low confidence
+└── Track extraction accuracy metrics
+
+Frontend:
+├── Image quality checker (blur detection)
+├── Retake photo option
+├── Manual entry fallback
+└── Accuracy dashboard for CA
+
+Test: GSTIN extraction accuracy >85%
+Time: 40-50 hours
+```
+
+#### **Week 8: Invoice Data Management**
+
+```
+Backend:
+├── Invoice entity (separate from Document)
+├── POST /api/invoices (create from extracted data)
+├── GET /api/invoices (list with filters)
+├── PUT /api/invoices/:id (edit)
+└── Link invoice ↔ document
+
+Frontend:
+├── Invoice list screen
+├── Invoice detail/edit form
+├── HSN code dropdown (top 50 codes)
+└── Amount calculation (taxable + GST)
+
+Test: CA can create 1 month's invoices for 1 client (20-30 invoices)
+Time: 50-60 hours
+```
+
+### Validation Checkpoint ✅
+
+**GO Decision (Proceed to Phase 3):**
+
+- [ ] Processed 100+ real invoices through OCR
+- [ ] GSTIN accuracy >80% (allows 20% manual correction)
+- [ ] Invoice amount accuracy >70%
+- [ ] CA reports: "This saves us 30-50% data entry time"
+- [ ] Average processing time <30 seconds per invoice
+
+**NO-GO Decision (Pivot or Fix):**
+
+- ❌ GSTIN accuracy <60% → Improve extraction or add manual flow
+- ❌ Textract costs >₹5,000/month → Reduce usage or find alternatives
+- ❌ CA says "manual entry is still faster" → Rethink OCR approach
+- ❌ Image quality issues in 50%+ uploads → Add quality guidance
+
+### Budget (Month 2)
+
+| Service           | Usage                                  | Cost         |
+|-------------------|----------------------------------------|--------------|
+| AWS EC2 t2.micro  | 750h (free tier)                       | ₹0           |
+| MongoDB Atlas M0  | 512MB                                  | ₹0           |
+| AWS S3            | 10GB storage, 500 GET/PUT              | ₹100-200     |
+| AWS Textract      | 200-300 pages (1000 free in month 1-3) | ₹0-500       |
+| AWS Cognito       | <50 MAU                                | ₹0           |
+| **Total Month 2** |                                        | **₹100-700** |
+
+---
+
+## Phase 3: GST Forms & Daily Usage (Weeks 9-12)
+
+### Objective
+
+**Validate that CAs will use the system daily for actual GST filing work.**
+
+### Week-by-Week Plan
+
+#### **Week 9: GSTR-1 Form (B2B Section)**
+
+```
+Backend:
+├── GSTR-1 B2B invoice aggregation logic
+├── Group by GSTIN + month/year
+├── Calculate totals (taxable, CGST, SGST, IGST)
+├── GET /api/gstr1/:clientId/:month/:year
+└── Export to JSON (GSTN portal format)
+
+Frontend:
+├── GSTR-1 form screen
+├── Month/year selector
+├── Invoice list for selected period
+├── Editable table view
+└── Summary totals
+
+Test: Generate GSTR-1 for 1 client with 20 invoices
+Time: 50-60 hours
+```
+
+#### **Week 10: GSTR-1 Export & Validation**
+
+```
+Backend:
+├── Excel export (match GSTN offline tool format)
+├── Validation rules:
+│   ├── GSTIN format validation
+│   ├── Amount cross-checks
+│   ├── Duplicate invoice detection
+│   └── Missing required fields
+└── Validation report API
+
+Frontend:
+├── "Export to Excel" button
+├── Validation error display
+├── Fix errors inline
+└── Mark as "Ready to File"
+
+Test: Export valid Excel file that CA can upload to GST portal
+Time: 40-50 hours
+```
+
+#### **Week 11: Client Dashboard & Reminders**
+
+```
+Backend:
+├── Dashboard API (client-wise compliance status)
+├── Deadline calculation logic (10th, 20th of month)
+├── SMS notification service (AWS SNS)
+├── Email notifications (AWS SES)
+└── Notification preferences per user
+
+Frontend:
+├── Dashboard with client cards
+├── Deadline countdown timers
+├── Document submission status
+├── Send reminder button (WhatsApp later, email for now)
+└── Compliance scorecard
+
+Test: CA sees all clients, upcoming deadlines, missing documents
+Time: 40-50 hours
+```
+
+#### **Week 12: Polish, Deploy & Onboard**
+
+```
+Backend:
+├── Production deployment (AWS EC2)
+├── Environment-based configuration
+├── Database backup setup (MongoDB Atlas)
+├── CloudWatch logs & basic monitoring
+└── Error tracking setup
+
+Frontend:
+├── Bug fixes from CA feedback
+├── UI polish (loading states, empty states)
+├── Onboarding tutorial/tooltips
+├── User documentation (PDF/video)
+└── Build and deploy to production
+
+Test: 2-3 CAs complete 1 full month GST cycle
+Time: 40-50 hours
+```
+
+### Validation Checkpoint ✅
+
+**GO Decision (Proceed to Phase 4 - Monetization):**
+
+- [ ] 2-3 CAs used system for full GST filing cycle (1 month)
+- [ ] At least 5 clients' GSTR-1 filed using your system
+- [ ] CAs report: "We filed faster than usual"
+- [ ] Zero critical bugs that blocked filing
+- [ ] CAs want to continue using it next month
+- [ ] System uptime >95% for the month
+
+**NO-GO Decision (Pivot or Fix):**
+
+- ❌ CAs filed manually instead of using system → UX too complex
+- ❌ Validation errors blocked filing → Fix validation logic
+- ❌ System downtime during critical filing period → Improve reliability
+- ❌ CA feedback: "Not saving us much time" → Identify bottlenecks
+- ❌ CAs stopped responding → Re-engage or find new pilots
+
+### Budget (Month 3)
+
+| Service                         | Usage                                        | Cost           |
+|---------------------------------|----------------------------------------------|----------------|
+| AWS EC2 t2.micro                | 750h (free tier year 1)                      | ₹0             |
+| MongoDB Atlas M0                | 512MB (consider M10 upgrade if >100 clients) | ₹0-2,000       |
+| AWS S3                          | 20GB storage, 2000 requests                  | ₹200-400       |
+| AWS Textract                    | 500 pages (~200 remaining in free tier)      | ₹500-1,000     |
+| AWS SNS (SMS)                   | 100 SMS reminders                            | ₹50-100        |
+| AWS SES (Email)                 | 1000 emails (free tier)                      | ₹0             |
+| SSL Certificate (Let's Encrypt) | Free                                         | ₹0             |
+| **Total Month 3**               |                                              | **₹750-3,500** |
+
+---
+
+## Phase 4: Monetization & First Revenue (Weeks 13-16)
+
+### Objective
+
+**Validate that CAs are willing to pay for the solution.**
+
+### Week-by-Week Plan
+
+#### **Week 13: Pricing & Payment Setup**
+
+```
+Backend:
+├── Subscription plans (Starter, Professional)
+├── Razorpay payment gateway integration
+├── Subscription management (start date, renewal)
+├── Usage tracking (documents, clients per tenant)
+└── Invoice generation for CA firms
+
+Frontend:
+├── Pricing page
+├── Subscription upgrade flow
+├── Payment form (Razorpay checkout)
+├── Billing history
+└── Usage dashboard
+
+Task: Present pricing to pilot CAs, negotiate if needed
+Time: 40-50 hours
+```
+
+#### **Week 14: Sales Conversations & Conversions**
+
+```
+Activities:
+├── Schedule 1-on-1 calls with each pilot CA
+├── Present value proposition (time saved, error reduction)
+├── Offer early adopter discount (50% off for 6 months)
+├── Get written agreement (email confirmation)
+└── Set up payment (first month paid)
+
+Goal: Convert at least 1 pilot CA to paid customer
+Time: 20-30 hours (sales, not coding)
+```
+
+#### **Week 15: Feature Requests & Iterations**
+
+```
+Based on CA feedback, implement top 2-3 quick wins:
+
+Likely requests:
+├── GSTR-3B form support
+├── Better bulk editing of invoices
+├── Duplicate invoice detection
+├── Client-wise document folders
+└── Mobile app improvements
+
+Prioritize by:
+1. Impact on daily workflow
+2. Implementation time (<1 week)
+3. Multiple CAs requesting it
+
+Time: 50-60 hours
+```
+
+#### **Week 16: Referral Program & Case Study**
+
+```
+Activities:
+├── Create case study from pilot CA (before/after metrics)
+├── Record video testimonial
+├── Design referral program (1 month free per referral)
+├── Create marketing materials (website, pitch deck)
+└── Identify next 5-10 CA prospects
+
+Goal: Get 1-2 referrals from existing customers
+Time: 30-40 hours
+```
+
+### Validation Checkpoint ✅
+
+**GO Decision (Proceed to Phase 5 - Scale):**
+
+- [ ] At least 1 CA paying customer (₹3K-5K/month)
+- [ ] Monthly Recurring Revenue (MRR) >₹3,000
+- [ ] Customer says: "I'd recommend this to other CAs"
+- [ ] Pipeline of 3-5 interested CAs (from referrals/outreach)
+- [ ] Churn: 0% (no customers cancelled)
+- [ ] Product-market fit signals: CAs using daily, asking for more features
+
+**NO-GO Decision (Pivot or Stop):**
+
+- ❌ Zero CAs willing to pay → Wrong pricing or insufficient value
+- ❌ CAs say "we'll pay later" → Build more value or change model
+- ❌ Pilot CAs stopped using after free period → UX or value problem
+- ❌ Cost per customer acquisition >₹20,000 → Unsustainable economics
+- ❌ You're burning out → Scope too large, simplify further
+
+### Budget (Month 4)
+
+| Service                 | Usage                                  | Cost             |
+|-------------------------|----------------------------------------|------------------|
+| AWS EC2 t2.micro        | 750h (free tier)                       | ₹0               |
+| MongoDB Atlas M0 or M10 | Upgrade if >50 clients                 | ₹0-2,500         |
+| AWS S3                  | 30GB storage                           | ₹300-500         |
+| AWS Textract            | 800 pages (₹1.50/page after free tier) | ₹1,200-2,000     |
+| AWS SNS (SMS)           | 200 SMS                                | ₹100-200         |
+| AWS SES (Email)         | 2000 emails                            | ₹0-50            |
+| Razorpay (2% + ₹3/txn)  | 2 subscriptions × ₹3000                | ₹120             |
+| **Total Month 4**       |                                        | **₹1,720-5,370** |
+
+**Revenue:** ₹3,000-6,000 (1-2 paying customers)
+**Net:** ₹0 to +₹2,500 (approaching break-even!)
+
+---
+
+## Phase 5: Scale (Week 17+) - Only if Phase 4 Validates
+
+### Objective
+
+**Grow from 2-3 customers to 10-20 customers while maintaining quality.**
+
+### Gradual Scaling Strategy
+
+#### **Months 5-6: Reach 10 Customers**
+
+```
+Focus:
+├── Sales & marketing (LinkedIn, CA associations)
+├── Customer onboarding automation
+├── 2-3 most-requested features
+├── Stability improvements (error handling)
+└── Documentation & support
+
+Target: 10 paying CAs × ₹4K average = ₹40K MRR
+Time: 300-400 hours (part-time consulting possible)
+```
+
+#### **Months 7-9: Reach 20-30 Customers**
+
+```
+Now you can justify:
+├── Upgrade to AWS t3.small (₹2,000/month)
+├── MongoDB M10 cluster (₹2,500/month)
+├── Part-time support person (₹15K/month)
+├── Better monitoring (Sentry, ₹2K/month)
+└── Advanced features:
+    ├── GSTR-2A/2B reconciliation
+    ├── WhatsApp integration
+    └── Basic analytics
+
+Target: 25 CAs × ₹5K average = ₹1.25L MRR
+Costs: ₹25-30K/month
+Net profit: ₹95K-1L/month (covers your salary!)
+```
+
+#### **Months 10-12: Reach 50+ Customers**
+
+```
+Now you can justify:
+├── Hiring full-time developer (₹40-50K/month)
+├── Customer success manager (₹30-35K/month)
+├── Better infrastructure:
+│   ├── Load balancer + 2 API instances
+│   ├── Redis for caching
+│   └── Separate staging environment
+└── Advanced features:
+    ├── Tally integration
+    ├── Payment tracking
+    └── Mobile app for clients
+
+Target: 50 CAs × ₹6K average = ₹3L MRR
+Costs: ₹1.2-1.5L/month
+Net profit: ₹1.5-1.8L/month (sustainable business!)
+```
+
+### When to Add Complexity
+
+| Technology    | Current State   | When to Add                              | Why                      |
+|---------------|-----------------|------------------------------------------|--------------------------|
+| API Gateway   | Not using       | At 1000 req/sec or need rate limiting    | Adds cost & complexity   |
+| Redis Cache   | Not using       | When DB queries slow (>500ms p95)        | Premature optimization   |
+| SQS + Lambda  | Not using       | When OCR takes >10s or need async        | Sync is simpler to debug |
+| Load Balancer | Single instance | At 80% CPU utilization consistently      | Single point of failure  |
+| Kubernetes    | Not using       | Never for this scale                     | Massive overkill         |
+| Microservices | Monolith        | At 5+ developers or 10K+ users           | Distributed complexity   |
+| AI/ML         | Rule-based OCR  | When you have 10K+ invoices for training | Need training data       |
+
+---
+
+## Financial Projections (Realistic)
+
+### Bootstrap Mode (Months 1-4)
+
+| Month       | Customers | MRR    | Costs  | Net     | Cumulative |
+|-------------|-----------|--------|--------|---------|------------|
+| **Month 1** | 0 (pilot) | ₹0     | ₹1,000 | -₹1,000 | -₹1,000    |
+| **Month 2** | 0 (pilot) | ₹0     | ₹700   | -₹700   | -₹1,700    |
+| **Month 3** | 0 (pilot) | ₹0     | ₹3,500 | -₹3,500 | -₹5,200    |
+| **Month 4** | 1-2       | ₹3,000 | ₹5,000 | -₹2,000 | -₹7,200    |
+
+**Total Investment:** ₹7,200 over 4 months (₹1,800/month average)
+**Risk:** Very low financial risk
+
+### Growth Mode (Months 5-12)
+
+| Month        | Customers | MRR       | Costs   | Net      | Cumulative |
+|--------------|-----------|-----------|---------|----------|------------|
+| **Month 5**  | 3         | ₹12,000   | ₹6,000  | +₹6,000  | -₹1,200    |
+| **Month 6**  | 5         | ₹20,000   | ₹8,000  | +₹12,000 | +₹10,800   |
+| **Month 9**  | 15        | ₹75,000   | ₹25,000 | +₹50,000 | +₹210,800  |
+| **Month 12** | 30        | ₹1,50,000 | ₹60,000 | +₹90,000 | +₹750,000  |
+
+**Break-even:** Month 5 (cumulative)
+**Profitable:** Month 6 onwards
+
+### Year 2 Projections
+
+| Quarter | Customers | MRR   | Costs (with team) | Net Profit  | ARR  |
+|---------|-----------|-------|-------------------|-------------|------|
+| Q1      | 50        | ₹2.5L | ₹1.2L             | ₹1.3L/month | ₹30L |
+| Q2      | 75        | ₹4L   | ₹1.8L             | ₹2.2L/month | ₹48L |
+| Q3      | 100       | ₹5.5L | ₹2.5L             | ₹3L/month   | ₹66L |
+| Q4      | 150       | ₹8L   | ₹3.5L             | ₹4.5L/month | ₹96L |
+
+---
+
+## Pricing Strategy (Phase 4+)
+
+### Tiered Pricing
+
+| Tier                   | Target                | Price         | Includes                                                          | Limits                  |
+|------------------------|-----------------------|---------------|-------------------------------------------------------------------|-------------------------|
+| **Pilot** (Months 1-4) | First 2-3 CAs         | Free          | Everything                                                        | Full access to validate |
+| **Starter**            | Solo CAs, 1-5 staff   | ₹2,999/month  | Basic OCR, GSTR-1/3B, 15 clients                                  | 1000 docs/month         |
+| **Professional**       | Growing firms         | ₹5,999/month  | + Reconciliation, 50 clients, Priority support                    | 3000 docs/month         |
+| **Enterprise**         | Large firms 10+ staff | ₹12,999/month | + Tally integration, Unlimited clients, Dedicated account manager | Unlimited               |
+
+### Early Adopter Discount (Months 4-6)
+
+- **50% off** for first 6 months (then full price)
+- Converts to: Starter ₹1,500/mo, Professional ₹3,000/mo
+- Lock-in: Annual commitment (cancel anytime but pay 3 months)
+
+### Revenue Scenarios
+
+**Conservative (80% Starter, 20% Professional):**
+
+- 10 customers: 8 Starter (₹24K) + 2 Pro (₹12K) = **₹36K MRR**
+
+**Realistic (60% Starter, 40% Professional):**
+
+- 20 customers: 12 Starter (₹36K) + 8 Pro (₹48K) = **₹84K MRR**
+
+**Optimistic (40% Starter, 50% Pro, 10% Enterprise):**
+
+- 50 customers: 20 Starter (₹60K) + 25 Pro (₹1.5L) + 5 Enterprise (₹65K) = **₹2.75L MRR**
+
+---
+
+## Technology Evolution Path
+
+### MVP Stack (Months 1-4)
+
+```
+Client:     Expo (Web + Mobile)
+API:        Spring Boot (single EC2 t2.micro)
+Auth:       AWS Cognito
+Storage:    AWS S3
+OCR:        AWS Textract (sync calls)
+Database:   MongoDB Atlas M0 (free)
+Monitoring: AWS CloudWatch (basic)
+```
+
+### Growth Stack (Months 5-9)
+
+```
+Add:
+├── MongoDB Atlas M10 (dedicated, ₹2.5K/mo)
+├── AWS t3.small instance (₹2K/mo)
+├── Sentry error tracking (₹2K/mo)
+├── Better logging (structured JSON logs)
+└── Automated daily backups
+```
+
+### Scale Stack (Months 10-12)
+
+```
+Add:
+├── Redis ElastiCache (₹3K/mo)
+├── Application Load Balancer + 2 instances
+├── SQS + Lambda for async OCR
+├── Separate staging environment
+├── AWS RDS for transactional data (if needed)
+└── CloudFront CDN for web app
+```
+
+### Enterprise Stack (Year 2+)
+
+```
+Add only if needed:
+├── API Gateway (rate limiting, API keys)
+├── Kubernetes (if 10+ microservices)
+├── Separate region (DR/backup)
+├── Advanced monitoring (DataDog, ₹10K/mo)
+└── Compliance (SOC 2, ISO 27001)
+```
+
+---
+
+## Phase Gates Summary
+
+### Visual Decision Tree
+
+```
+Week 0: Problem Validation
+├─ ✅ 2+ CAs committed → Phase 1
+└─ ❌ No CA commitment → STOP or find new CAs
+
+Week 4: Technical Validation
+├─ ✅ Auth + Upload working → Phase 2
+└─ ❌ Technical blockers → Fix or pivot
+
+Week 8: Value Validation
+├─ ✅ OCR saves time (80%+ accuracy) → Phase 3
+└─ ❌ OCR not good enough → Improve or manual flow
+
+Week 12: Usage Validation
+├─ ✅ CAs used for full GST cycle → Phase 4
+└─ ❌ Not using daily → UX overhaul or pivot
+
+Week 16: Monetization Validation
+├─ ✅ 1+ paying customer → Phase 5 (Scale)
+└─ ❌ No willingness to pay → Reconsider business model
+
+Week 24+: Scale Validation
+├─ ✅ 10+ customers, <10% churn → Keep scaling
+└─ ❌ High churn, no growth → Product-market fit issue
+```
 
 ---
 
 ## Critical Success Factors
 
-### Week 1-8: Foundation Phase
+### Must-Have by Phase
 
-- ✅ AWS Textract OCR achieving 85%+ accuracy
-- ✅ Payment tracking system fully functional
-- ✅ Document upload from mobile camera working
-- ✅ Basic GSTR forms operational
+#### Phase 1 (Week 4)
 
-### Week 9-14: Automation Phase
+- [ ] 2 CAs logged in and uploaded documents
+- [ ] Zero security vulnerabilities (Cognito JWT working)
+- [ ] Uptime >90% (local testing)
 
-- ✅ Reconciliation reducing time by 70%
-- ✅ Workflow automation eliminating manual tracking
-- ✅ Client portal adoption >50%
-- ✅ Zero critical bugs in beta
+#### Phase 2 (Week 8)
 
-### Week 15-20: Scale Phase
+- [ ] GSTIN extraction >80% accurate
+- [ ] Processed 100+ real invoices
+- [ ] CA confirms: "This saves time"
 
-- ✅ Construction module handling 1000+ invoices
-- ✅ Tally integration functional
-- ✅ System handling 50 concurrent users
-- ✅ 99.9% uptime achieved
+#### Phase 3 (Week 12)
 
-### Week 21-26: Intelligence Phase
+- [ ] 2-3 CAs filed GSTR-1 using system
+- [ ] Zero filing deadline misses due to system
+- [ ] CAs want to use it again next month
 
-- ✅ AI features showing measurable time savings
-- ✅ Analytics driving user insights
-- ✅ Customer acquisition cost <₹5,000
-- ✅ Monthly retention >90%
+#### Phase 4 (Week 16)
 
----
+- [ ] 1+ paying customer
+- [ ] ₹3K+ MRR
+- [ ] Customer retention 100% (no cancellations)
 
-## Risk Mitigation Updates
+#### Phase 5 (Month 12)
 
-### New Risks Identified from Research
-
-#### 🔴 Client Adoption Resistance (High)
-
-**Mitigation:** WhatsApp-first approach, no login required initially
-
-#### 🔴 OCR Accuracy on Poor Quality Images (High)
-
-**Mitigation:** Confidence scoring, manual override, progressive improvement
-
-#### 🔴 Tally Integration Complexity (High)
-
-**Mitigation:** Start with read-only, phased bi-directional sync
-
-#### 🟡 Payment Recovery Features Creating Friction (Medium)
-
-**Mitigation:** Soft reminders, customizable schedules, relationship focus
-
-#### 🔴 GST Portal API Instability (High)
-
-**Mitigation:** Queue-based retry, manual fallback, status monitoring
-
-#### 🔴 GST Portal 2FA Automation Challenge (CRITICAL)
-
-**Challenge:** GST Portal requires SMS OTP (2-factor authentication) for API access
-**Mitigation:**
-
-- Explore GSTN ASP (Application Service Provider) license (₹2-5L/year)
-- Manual approval workflow for CA firms (approve once daily)
-- Virtual mobile numbers for OTP automation (compliance risk)
-- Fallback: Manual GST portal access documentation
-
-#### 🔴 Data Migration from Existing Systems (High)
-
-**Challenge:** CA firms have data in Excel, old Tally versions, emails
-**Mitigation:**
-
-- Build import wizards for common formats (Excel templates)
-- Offer migration services as part of onboarding
-- Start with new data, backfill historical data later
-- Document manual migration processes
-
-#### 🔴 Single CA Partner Dependency for Validation (CRITICAL)
-
-**Challenge:** Building for only 1 CA partner creates bias and validation risk
-**Mitigation:**
-
-- Pilot with **5-10 diverse CA firms** in Phase 1 (not just 1)
-- Different firm sizes (solo, 2-5, 5-10 employees)
-- Different specializations (retail, construction, services)
-- Get feedback before building advanced features
-
-#### 🔴 Concurrent User Scalability (Month-End Rush) (High)
-
-**Challenge:** All CAs file GST simultaneously (10th-20th of month)
-**Mitigation:**
-
-- Load testing with 100+ concurrent users
-- Auto-scaling ECS Fargate tasks
-- Queue-based processing for heavy operations (OCR, reconciliation)
-- Graceful degradation (show cached data during peak load)
-
-#### 🔴 Customer Acquisition Cost vs Lifetime Value (High)
-
-**Challenge:** Small CA firms have limited budgets
-**Mitigation:**
-
-- Calculate LTV:CAC ratio target >3:1
-- Optimize pricing (₹3000-5000/month per CA firm)
-- Focus on referrals and CA associations (low CAC channels)
-- Build case studies from early adopters
-
-#### 🔴 Security Incident / Data Breach (CRITICAL)
-
-**Challenge:** Financial data is highly sensitive
-**Mitigation:**
-
-- Regular VAPT (Vulnerability Assessment & Penetration Testing) - twice/year
-- Bug bounty program (Phase 3+)
-- Cyber insurance (₹5-10L coverage)
-- Incident response plan (documented, tested)
-- 24/7 security monitoring (CloudWatch alarms)
-
-#### 🟡 Tally Integration Technical Debt (Medium)
-
-**Challenge:** Tally has **no official API** for most versions
-**Mitigation:**
-
-- Use Tally TDL (Tally Definition Language) for custom integration
-- Partner with third-party Tally connector providers (Tally on Cloud, etc.)
-- On-premise agent installation at CA firm sites (VPN/secure tunnel)
-- Start with Tally Prime (has better API support)
-- Document limitations clearly to customers
-
-#### 🟡 Seasonal Churn Risk (Medium)
-
-**Challenge:** GST work is monthly, but income tax is seasonal
-**Mitigation:**
-
-- Expand to ITR (Income Tax Returns) filing (Phase 4+)
-- Add TDS compliance features
-- ROC (Registrar of Companies) compliance
-- Become year-round compliance platform (not just GST)
+- [ ] 30+ customers
+- [ ] ₹1.5L+ MRR
+- [ ] <15% monthly churn
+- [ ] Break-even or profitable
 
 ---
 
-## Investment Requirements
+## Risk Mitigation
 
-### 💰 Technology Costs (Monthly - Realistic)
+### High-Risk Items (Actively Monitor)
 
-| Service               | Realistic Cost Range         | Notes                                              |
-|-----------------------|------------------------------|----------------------------------------------------|
-| AWS Infrastructure    | ₹40,000-60,000               | ECS Fargate, Lambda, API Gateway, VPC              |
-| MongoDB Atlas         | ₹30,000-50,000               | Dedicated cluster for production                   |
-| AWS Textract          | ₹50,000-1,00,000             | Volume-based (construction: 1000+ invoices/client) |
-| WhatsApp Business API | ₹30,000-50,000               | Per-conversation pricing × client base             |
-| Third-party APIs      | ₹15,000-25,000               | GST Portal, Tally connectors, Razorpay             |
-| SMS Gateway           | ₹10,000-20,000               | Payment reminders (AWS SNS/MSG91)                  |
-| Firebase (FCM)        | ₹0-5,000                     | Push notifications (free tier covers most)         |
-| CloudWatch/Monitoring | ₹5,000-10,000                | Logs, metrics, alerts                              |
-| Secrets Manager       | ₹2,000-5,000                 | API keys, credentials rotation                     |
-| Expo EAS Build        | ₹2,400                       | $29/month for builds                               |
-| **Total**             | **₹2,25,000-3,50,000/month** | **~4x higher than initial estimate**               |
-
-> ⚠️ **Budget Note:** Initial estimate of ₹43-77K/month was significantly underestimated. Realistic production costs
-> with 50+ clients and high invoice volume are ₹2.25-3.5L/month.
-
-### 👥 Team Requirements (Expo Unified Approach)
-
-| Phase                     | Team Composition                                                                                                                                                                            | Justification                                   |
-|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| **Phase 0-1 (Weeks 1-8)** | • 1 Backend Developer (Java/Spring Boot)<br>• **1 Expo Developer (Web + Mobile unified)**<br>• 1 DevOps Engineer (contract/part-time)<br>• 1 Product Manager<br>• 1 CA Consultant (advisor) | Expo enables single developer for all platforms |
-| **Phase 2 (Weeks 9-14)**  | +1 QA Engineer (test web + mobile)                                                                                                                                                          | Quality assurance across platforms              |
-| **Phase 3 (Weeks 15-20)** | +1 Backend Developer (scale)                                                                                                                                                                | Construction module + Tally integration         |
-| **Phase 4 (Weeks 21-26)** | +1 Customer Success                                                                                                                                                                         | Onboarding, support, training                   |
-
-**Cost Savings with Expo:** ~₹11.6L saved over 26 weeks by using unified Expo approach instead of separate web + mobile
-developers
-
+| Risk                      | Likelihood | Impact   | Mitigation                              | Early Warning Signs                  |
+|---------------------------|------------|----------|-----------------------------------------|--------------------------------------|
+| **CA abandons pilot**     | Medium     | High     | Weekly check-ins, show progress         | Not responding to messages           |
+| **OCR accuracy too low**  | Medium     | High     | Manual fallback, improve over time      | <60% GSTIN accuracy                  |
+| **AWS costs spike**       | Low        | Medium   | Free tier usage, billing alerts         | Bill >₹5K in month 1-3               |
+| **Textract latency**      | Low        | Medium   | Async processing, progress indicator    | >30s processing time                 |
+| **Security breach**       | Low        | Critical | JWT validation, tenant isolation, HTTPS | Unauthorized data access             |
+| **Can't convert to paid** | Medium     | Critical | Prove value early, pricing research     | "We'll pay later" responses          |
+| **Solo burnout**          | High       | Critical | 40-50h/week max, take weekends off      | Working 7 days/week, 12+ hours       |
+| **Scope creep**           | High       | High     | Ruthless prioritization, say "no" often | Building features CAs didn't ask for |
 
 ---
 
-## Success Metrics Dashboard
+## Deferred Features (Build Later)
 
-### 📊 Operational Metrics
+Do NOT build these until you have 10+ paying customers:
 
-| Metric                                | Target   |
-|---------------------------------------|----------|
-| Data entry time reduction             | 80% ↓    |
-| Reconciliation time                   | 70% ↓    |
-| Document collection before deadline-5 | 95% ↑    |
-| Payment collection cycle              | <30 days |
+### Month 6+ Features
 
-### 💼 Business Metrics
+- ❌ GSTR-2A/2B reconciliation (scope.md original line 644-654)
+- ❌ Three-way matching algorithm (complex, needs real data)
+- ❌ Advanced analytics & dashboards
+- ❌ ITC eligibility calculator (Section 17(5) rules)
 
-| Metric               | Target                |
-|----------------------|-----------------------|
-| Customer Acquisition | 20 firms by Week 26   |
-| Revenue              | ₹2 lakh MRR by launch |
-| Retention            | >90% monthly          |
-| NPS Score            | >50                   |
+### Month 9+ Features
 
-### ⚙️ Technical Metrics
+- ❌ Tally integration (no official API, complex)
+- ❌ WhatsApp Business API (₹30-50K/month cost)
+- ❌ Payment tracking & reminders
+- ❌ Construction sector module
 
-| Metric                | Target                    |
-|-----------------------|---------------------------|
-| OCR Accuracy          | >90% on standard invoices |
-| API Response Time     | <2 seconds                |
-| Uptime                | 99.9%                     |
-| Mobile App Crash Rate | <1%                       |
+### Year 2+ Features
+
+- ❌ AI/ML-powered categorization (need 10K+ invoices)
+- ❌ Predictive analytics
+- ❌ Natural language queries
+- ❌ Multi-branch operations
+- ❌ API for third-party integrations
 
 ---
 
-## 💰 Pricing Strategy
+## Solo Founder Weekly Checklist
 
-### Recommended Pricing Model
+### Every Week (Weeks 1-16)
 
-**Tiered Subscription Pricing (per CA Firm)**
+**Monday:**
 
-| Tier             | Target Customer           | Monthly Price  | Included                                                                                                                                                                                           | Limitations                                    |
-|------------------|---------------------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
-| **Starter**      | Solo CAs, small firms     | ₹2,999/month   | • Up to 10 clients<br>• 500 documents/month<br>• Basic OCR<br>• Basic GST filing<br>• Email support                                                                                                | No Tally integration<br>No WhatsApp automation |
-| **Professional** | Growing firms (2-5 staff) | ₹5,999/month   | • Up to 30 clients<br>• 2000 documents/month<br>• Advanced OCR<br>• Reconciliation engine<br>• Tally integration (read-only)<br>• WhatsApp notifications<br>• Chat support                         | Limited API access                             |
-| **Enterprise**   | Large firms (5+ staff)    | ₹12,999/month  | • Unlimited clients<br>• Unlimited documents<br>• AI-powered reconciliation<br>• Tally bi-directional sync<br>• WhatsApp automation<br>• Priority support<br>• Custom integrations<br>• API access | -                                              |
-| **Custom**       | Multi-branch firms        | Custom pricing | Everything in Enterprise + dedicated account manager, custom SLAs, on-premise deployment options                                                                                                   | -                                              |
+- [ ] Review last week's progress
+- [ ] Plan this week's 3 most important tasks
+- [ ] Check AWS billing dashboard
 
-**Additional Charges:**
+**Wednesday:**
 
-- **Per-client overage:** ₹150/client/month (beyond tier limit)
-- **Document overage:** ₹5/document (beyond tier limit)
-- **WhatsApp messages:** ₹0.50/conversation (after free tier)
+- [ ] Mid-week check-in with pilot CA (15-min call)
+- [ ] Share screenshot/demo of progress
+- [ ] Get feedback on UX
 
-### Competitive Pricing Analysis
+**Friday:**
 
-| Product              | Target              | Pricing                     | Our Advantage                                        |
-|----------------------|---------------------|-----------------------------|------------------------------------------------------|
-| **Clear (ClearTax)** | Small businesses    | ₹999-2,999/month            | More CA-workflow focused, better reconciliation      |
-| **Zoho Books**       | SMBs                | ₹1,500/month                | Better GST compliance focus, mobile scanning         |
-| **Tally Prime**      | All businesses      | ₹18,000/year (₹1,500/month) | Add-on positioning (not replacement), WhatsApp-first |
-| **BUSY**             | Retail/Distribution | ₹15,000/year                | CA firm workflows, multi-client management           |
+- [ ] Ship something visible (even if buggy)
+- [ ] Update GitHub (commit progress)
+- [ ] Write down: What worked? What didn't? What to change?
 
-**Positioning:** "Tally Add-on for CA Workflow Automation" (not Tally replacement)
+**Sunday:**
 
-### Revenue Projections
+- [ ] Take a full day off (burnout prevention)
 
-| Milestone        | Target       | MRR        | ARR          | Assumptions                                         |
-|------------------|--------------|------------|--------------|-----------------------------------------------------|
-| **Week 26 (GA)** | 20 CA firms  | ₹2,00,000  | ₹24,00,000   | Avg ₹10,000/firm (mix of Professional + Enterprise) |
-| **Month 12**     | 100 CA firms | ₹8,00,000  | ₹96,00,000   | 20% Enterprise, 60% Professional, 20% Starter       |
-| **Month 24**     | 500 CA firms | ₹35,00,000 | ₹4,20,00,000 | Improved mix, reduced churn                         |
+### Monthly (After Phase 1)
 
-**Break-even Analysis:**
-
-- **Monthly Costs:** ₹2.5-3.5L (tech) + ₹6-8L (team) = **₹8.5-11.5L/month**
-- **Break-even:** ~85-115 CA firms at avg ₹10K/month
-- **Target:** Month 6-9 post-launch
+- [ ] Review success metrics (usage, adoption, feedback)
+- [ ] Decide: GO to next phase or FIX current phase issues
+- [ ] Financial check: Am I staying within budget?
+- [ ] Motivation check: Still excited about this? (If no, reconsider)
 
 ---
 
-## 🚀 Go-to-Market Strategy
+## When to STOP (Red Flags)
 
-### Phase 1: Closed Beta (Week 8-14)
+**Consider stopping or pivoting if:**
 
-**Target:** 5-10 CA firms (diverse profiles)
+1. **Week 8:** OCR accuracy stuck at <60% after 2 weeks of effort
+2. **Week 12:** CAs filed GST manually instead of using your system
+3. **Week 16:** Zero CAs willing to pay even at 50% discount
+4. **Month 6:** Only 1-2 customers, no growth for 2 months
+5. **Month 9:** Customer churn >30% per month
+6. **Any time:** You're consistently working 70+ hours/week and burning out
+7. **Any time:** Running out of savings and no revenue in sight
 
-**Acquisition Channels:**
+**It's okay to stop.** Failed startups are learning experiences. Key: Stop early if it's not working, don't waste years.
 
-- **Personal network** - founders' connections in CA community
-- **LinkedIn outreach** - targeted messaging to CA firm owners
-- **CA association partnerships** - ICAI chapters, regional bodies
-- **Webinars** - "Solve GST Compliance Chaos" for CAs
+---
 
-**Offer:**
+## Additional Resources
 
-- **Free** for 3 months (Beta pricing)
-- Hands-on onboarding and training
-- Dedicated support (founder-led)
-- Input on product roadmap
+### Files to Create
 
-**Success Criteria:**
+```
+/docs
+  ├── MVP_ARCHITECTURE.md   ← Simplified architecture (Phase 1-4 only)
+  ├── GST_DOMAIN_LOGIC.md   ← Reconciliation rules from CA partner
+  ├── API_SPEC.yaml         ← OpenAPI spec for all endpoints
+  ├── DEPLOYMENT.md         ← How to deploy to production
+  └── RUNBOOK.md            ← Emergency procedures, monitoring
 
-- 5 active pilot firms by Week 14
-- 80% feature utilization
-- NPS >50
-- 3 testimonials/case studies
+/tests
+  ├── fixtures/
+  │   └── sample_invoices/  ← 20 real anonymized invoices (test dataset)
+  └── integration/
+      └── tenant_isolation_test.ts  ← CRITICAL security test
+```
 
-### Phase 2: Pilot Expansion (Week 15-26)
+### Weekly Demo Template
 
-**Target:** 20 CA firms (scale pilots)
+**Week X Progress:**
 
-**Acquisition Channels:**
+- ✅ What we built: [Screenshot/video]
+- ✅ What works: [List]
+- ⚠️ What's buggy: [List]
+- ❓ Questions for you: [List]
+- 🎯 Next week: [Plan]
 
-- **Referrals** from beta customers (incentivize with 1-month free)
-- **Case studies** - publish success stories on website/LinkedIn
-- **CA conferences** - ICAI events, regional CA meetups
-- **Content marketing** - SEO for "GST compliance software for CAs"
-- **Google/Facebook Ads** - targeted campaigns (budget: ₹50K/month)
+---
 
-**Pricing:**
+## Summary: Validation-Driven Solo Roadmap
 
-- **50% discount** for first 6 months (early adopter pricing)
-- Lock-in annual contracts
+| Phase | Weeks  | Objective                      | Budget    | Validation                  |
+|-------|--------|--------------------------------|-----------|-----------------------------|
+| **0** | Week 0 | Find 2+ committed CA partners  | ₹0        | CA says "yes"               |
+| **1** | 1-4    | Auth + Upload working          | ₹1K       | CAs uploaded 10+ docs       |
+| **2** | 5-8    | OCR saves data entry time      | ₹700-3.5K | 80%+ GSTIN accuracy         |
+| **3** | 9-12   | CAs file GST using system      | ₹750-3.5K | 2-3 CAs used for full cycle |
+| **4** | 13-16  | First paying customer          | ₹1.7-5.4K | ₹3K+ MRR                    |
+| **5** | 17+    | Scale to 10, 30, 50+ customers | ₹6-60K/mo | Break-even, profitability   |
 
-**Success Criteria:**
+**Total Investment (4 months):** ₹3,150-13,000
+**Time to First Revenue:** Week 13-16
+**Time to Break-Even:** Month 5-6
+**Time to Sustainability:** Month 9-12
 
-- 20 paying customers by Week 26
-- ₹2L MRR
-- <20% churn
-- 5 video testimonials
+---
 
-### Phase 3: Market Launch (Month 7-12)
-
-**Target:** 100 CA firms
-
-**Acquisition Channels:**
-
-- **Tally partnership** - explore distribution through Tally partner network
-- **CA influencers** - partner with prominent CAs on YouTube/LinkedIn
-- **Webinar series** - monthly educational content
-- **Inside sales team** - hire 2 sales reps
-- **Paid ads** - scale to ₹2L/month budget
-- **Content SEO** - blog, guides, templates
-
-**Pricing:**
-
-- **Standard pricing** (no discounts)
-- **Free trial:** 14 days (no credit card required)
-
-**Success Criteria:**
-
-- 100 customers
-- ₹8L MRR
-- LTV:CAC ratio >3:1
-- <15% monthly churn
-
-### Phase 4: Scale (Month 13-24)
-
-**Target:** 500 CA firms
-
-**Acquisition Channels:**
-
-- **Channel partnerships** - Tally, Razorpay, GST Suvidha Providers
-- **Affiliate program** - CAs refer CAs (20% recurring commission)
-- **Marketplace listings** - AWS Marketplace, Zoho Marketplace
-- **PR & Media** - Business Standard, Economic Times coverage
-
-**Team:**
-
-- 5 inside sales reps
-- 3 customer success managers
-- 1 marketing manager
-
-**Success Criteria:**
-
-- 500 customers
-- ₹35L MRR
-- <10% monthly churn
-- 40% YoY growth
-
-### Key Success Factors
-
-1. **Product-Led Growth:**
-    - Self-service onboarding (mobile app → immediate value)
-    - Free trial with usage-based pricing
-    - In-app referral program
-
-2. **Community Building:**
-    - CA WhatsApp groups (invite-only)
-    - Monthly "CA Compliance Roundtable" webinars
-    - Annual user conference
-
-3. **Trust & Credibility:**
-    - ICAI guidelines compliance
-    - Security certifications (ISO 27001, SOC 2)
-    - Transparent pricing (no hidden fees)
-    - 99.9% uptime SLA
-
-4. **Customer Success:**
-    - Dedicated onboarding (1 week hand-holding)
-    - 24/7 chat support (Starter: email only)
-    - Knowledge base (videos, guides, FAQs)
-    - Quarterly business reviews (Enterprise tier)
+**Last Updated:** January 2025
+**Document Owner:** Solo Founder
+**Review Frequency:** After each phase gate
+**Next Review:** After Week 4 validation checkpoint
