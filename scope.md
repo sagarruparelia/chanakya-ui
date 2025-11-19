@@ -35,13 +35,20 @@ Small CA firms (2-5 employees, 20-30 clients) are drowning in operational chaos:
 Each phase has a **VALIDATION CHECKPOINT**. You only proceed to the next phase if validation succeeds.
 
 ```
-Phase 0 (Week 0)    → VALIDATE: Problem + CA commitment
-Phase 1 (Week 1-4)  → VALIDATE: Technical feasibility
-Phase 2 (Week 5-8)  → VALIDATE: Core value (OCR works)
-Phase 3 (Week 9-12) → VALIDATE: Daily usage by 2-3 CAs
-Phase 4 (Week 13-16)→ VALIDATE: Willingness to pay
-Phase 5+ (Week 17+) → SCALE: Only if all validations pass
+Phase 0 (Week 0)    → VALIDATE: Problem + CA commitment ✅ COMPLETED
+Phase 1 (Week 1-4)  → VALIDATE: Mobile app + Multi-project structure
+Phase 2 (Week 5-8)  → VALIDATE: Invoice generation (KILLER FEATURE)
+Phase 3 (Week 9-12) → VALIDATE: Team collaboration + GSTR filing
+Phase 4 (Week 13-15)→ VALIDATE: Willingness to pay
+Phase 5+ (Week 16+) → SCALE: Only if all validations pass
 ```
+
+**Updated from CA Partner Feedback:**
+- ✅ Mobile app is CRITICAL (both CA + Customer)
+- ✅ Invoice generation = Killer feature (customers CREATE invoices in-app)
+- ✅ Multi-project structure (CAs manage multiple client engagements)
+- ✅ Timeline: 15 weeks (was 12, +3 weeks for invoice generation + projects)
+- ⚠️ Conversational AI deferred to Phase 6+ (needs training data)
 
 ---
 
@@ -84,11 +91,13 @@ Phase 5+ (Week 17+) → SCALE: Only if all validations pass
 
 ---
 
-## Phase 1: Technical Foundation (Weeks 1-4)
+## Phase 1: Technical Foundation + Multi-Project (Weeks 1-4)
 
 ### Objective
 
-**Validate that you can build the technical infrastructure and CAs can login + upload documents.**
+**Validate mobile app + multi-project structure. CAs can login, manage multiple projects, upload documents.**
+
+**NEW: Multi-Project Support** - Each client can have multiple projects (GST Compliance, ITR Filing, TDS, etc.)
 
 ### MVP Tech Stack (Simplified)
 
@@ -129,7 +138,7 @@ Phase 5+ (Week 17+) → SCALE: Only if all validations pass
 
 ### Week-by-Week Plan
 
-#### **Week 1: Authentication & Setup**
+#### **Week 1: Authentication & Multi-Project Setup**
 
 ```
 Backend:
@@ -137,16 +146,31 @@ Backend:
 ├── AWS Cognito user pool setup
 ├── JWT validation filter
 ├── MongoDB connection
+├── Entities: Tenant, User, Client, Project ← NEW
+├── Multi-project data model (tenantId → clientId → projectId)
 └── Health check endpoint
 
-Frontend:
-├── Expo project with TypeScript
+Frontend (Expo - Mobile + Web):
+├── Expo project with TypeScript + Expo Router
 ├── Login screen (email + password)
 ├── AWS Amplify Cognito integration
-└── Protected navigation
+├── Protected navigation (tabs + stack)
+├── Project selector screen ← NEW
+└── Empty dashboard
 
-Test: User can signup, login, see empty dashboard
+Test: User can signup, login, select project, see dashboard
 Time: 50-60 hours (10-12 hours/day, 5 days)
+```
+
+**Data Model Change:**
+```javascript
+// OLD: Flat structure
+{tenantId, clientId, documents}
+
+// NEW: Project-based hierarchy
+{tenantId, clientId, projectId, projectType, documents}
+
+// Project types: GST_COMPLIANCE, ITR_FILING, TDS_MANAGEMENT
 ```
 
 #### **Week 2: Document Upload (Mobile)**
@@ -187,40 +211,57 @@ Test: CA staff can view uploaded documents on web
 Time: 50-60 hours
 ```
 
-#### **Week 4: User Management & Polish**
+#### **Week 4: Client & Project Management**
 
 ```
 Backend:
-├── User roles (CA_ADMIN, CA_STAFF, CLIENT)
+├── User roles (CA_OWNER, CA_MANAGER, CA_STAFF, CLIENT_ADMIN, CLIENT_USER) ← UPDATED
 ├── Client entity CRUD
+├── Project entity CRUD ← NEW
 ├── User profile endpoints
-└── Basic authorization (@PreAuthorize)
+├── Basic authorization (@PreAuthorize)
+└── Project assignment to staff
 
 Frontend:
 ├── Client list screen
 ├── Add/Edit client form
+├── Project list per client ← NEW
+├── Add/Edit project form ← NEW
 ├── User profile screen
 └── Bug fixes & UI polish
 
-Test: CA can add clients, assign documents to clients
-Time: 40-50 hours
+Test: CA can add clients, create multiple projects per client
+Time: 50-60 hours
+```
+
+**Example Use Case:**
+```
+Jewelry Store A
+├── Project: Monthly GST Compliance
+└── Project: Annual ITR Filing
+
+Restaurant B
+└── Project: GST Compliance
 ```
 
 ### Validation Checkpoint ✅
 
 **GO Decision (Proceed to Phase 2):**
 
-- [ ] 2 CA firms have successfully logged in
+- [ ] 2 CA firms using mobile app daily
 - [ ] At least 10 documents uploaded via mobile camera
-- [ ] CA staff can view documents in web dashboard
+- [ ] Multi-project structure working (2+ projects per client)
+- [ ] CA can switch between projects easily
+- [ ] Mobile app works on both iOS and Android
 - [ ] No critical bugs in auth or upload flow
-- [ ] CA feedback: "This is working, keep going"
+- [ ] CA feedback: "Mobile app is useful, keep going"
 
 **NO-GO Decision (Pivot or Fix):**
 
 - ❌ Upload fails >30% of the time → Fix reliability first
 - ❌ CA says "too complicated to use" → Simplify UX
 - ❌ Camera quality too poor on invoices → Add image quality checks
+- ❌ Multi-project confusing → Simplify navigation
 - ❌ CA lost interest, not responding → Find new pilot partners
 
 ### Budget (Month 1)
@@ -236,93 +277,170 @@ Time: 40-50 hours
 
 ---
 
-## Phase 2: OCR & Core Value (Weeks 5-8)
+## Phase 2: Invoice Generation + OCR (Weeks 5-8) ⭐ KILLER FEATURE
 
 ### Objective
 
-**Validate that OCR works well enough to save CA staff time on data entry.**
+**Validate that customers will CREATE invoices in-app (not just upload). This is the game-changer.**
+
+**Why Invoice Generation First:**
+- 10x better data quality (structured from start vs OCR extraction)
+- Customers get immediate value (not just CAs)
+- Stickiness: Once customers create invoices here, they're locked in
+- Revenue: Can charge per invoice generated
+- OCR becomes fallback for external invoices
 
 ### Week-by-Week Plan
 
-#### **Week 5: AWS Textract Integration**
+#### **Week 5: Product Catalog & Invoice Structure**
+
+```
+Backend:
+├── Product entity (name, HSN, price, tax rate, unit of measure)
+├── POST /api/products (create product)
+├── GET /api/products (by project - catalog per client)
+├── PUT /api/products/:id (edit product)
+├── Invoice entity (structured with line items)
+├── POST /api/invoices/create (NEW: create invoice from scratch)
+└── Customer/Buyer entity (for B2B invoices)
+
+Frontend (Mobile-First):
+├── Product catalog screen
+├── Add/Edit product form (name, HSN, price, GST rate)
+├── Product search/autocomplete
+├── Quick add product (name + price only)
+└── Product categories (for jewelry: Rings, Necklaces, etc.)
+
+Test: Customer can create product catalog (20+ products)
+Time: 50-60 hours
+```
+
+**Example Product (Jewelry Store):**
+```javascript
+{
+  name: "Gold Necklace 22K",
+  hsnCode: "7113",
+  category: "JEWELRY",
+  unitOfMeasure: "GRAMS",
+  basePrice: 6000, // per gram
+  taxRate: 3, // 3% GST
+  makingCharges: 5000
+}
+```
+
+#### **Week 6: Invoice Creation Flow** ⭐ CORE FEATURE
+
+```
+Backend:
+├── Invoice calculation logic:
+│   ├── Line items (quantity × price)
+│   ├── Making charges (for jewelry)
+│   ├── Taxable value calculation
+│   ├── CGST, SGST, IGST calculation
+│   ├── Round-off handling
+│   └── Grand total
+├── POST /api/invoices (create invoice with line items)
+├── PDF generation (JasperReports or Apache PDFBox)
+│   ├── Company logo
+│   ├── Invoice template
+│   ├── Terms & conditions
+│   └── QR code (for GST portal)
+└── Auto-generate invoice number (INV-2025-001)
+
+Frontend (Mobile):
+├── "Create Invoice" button (prominent, FAB)
+├── Add/Select customer (quick add or from list)
+├── Add line items (select products)
+├── Quantity input (weight for jewelry)
+├── Auto-calculate totals (real-time)
+├── Preview invoice (before generating)
+├── Generate PDF
+├── Share options:
+│   ├── WhatsApp (direct share)
+│   ├── Email
+│   └── SMS
+└── Auto-save to project (ready for GSTR-1)
+
+Test: Customer creates invoice in <2 minutes
+Time: 60-70 hours (complex but worth it!)
+```
+
+**Example Invoice Flow (Jewelry Store):**
+```
+1. Tap "Create Invoice"
+2. Select customer: "Ramesh Kumar" (or quick add)
+3. Add product: "Gold Necklace 22K"
+4. Enter quantity: 15 grams
+5. Auto-calculate: 15g × ₹6,000 + ₹5,000 making = ₹95,000
+6. GST 3% auto-added: ₹2,850
+7. Total: ₹97,850
+8. Generate PDF
+9. Share via WhatsApp → Customer receives invoice instantly
+10. Auto-saved to GST records
+
+Time: ~90 seconds 🚀
+```
+
+#### **Week 7: OCR Integration (Fallback for External Invoices)**
 
 ```
 Backend:
 ├── POST /api/documents/:id/process (trigger OCR)
 ├── AWS Textract API integration (synchronous)
-├── Basic text extraction (raw blocks)
-├── Store extracted text in MongoDB
-└── Confidence scores per field
-
-Frontend:
-├── "Process with OCR" button
-├── Processing status indicator
-├── Display raw extracted text
-└── Show confidence scores
-
-Test: Textract successfully extracts text from 80%+ invoices
-Time: 50-60 hours
-```
-
-#### **Week 6: Invoice Field Extraction**
-
-```
-Backend:
 ├── Parse Textract response for key fields:
-│   ├── GSTIN (regex: \d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1})
+│   ├── GSTIN (regex validation)
 │   ├── Invoice number
-│   ├── Invoice date (multiple formats)
-│   ├── Total amount (₹ symbol, commas)
-│   └── Vendor/buyer name
-├── Field validation logic
-└── Manual override capability
+│   ├── Invoice date
+│   ├── Amount
+│   └── Vendor name
+├── Store extracted data with confidence scores
+└── Create invoice from OCR data (if confidence >70%)
 
 Frontend:
-├── Structured field display
-├── Edit extracted fields
-├── Validation errors (e.g., invalid GSTIN)
-└── Save corrected data
+├── "Process with OCR" button (for uploaded documents)
+├── Loading state (15-25 seconds)
+├── Display extracted fields with confidence scores
+├── Edit extracted data
+├── Convert to invoice (creates structured invoice)
+└── Manual entry fallback
 
-Test: 70%+ of invoices have correct GSTIN extracted
+Test: OCR extracts GSTIN from 70%+ uploaded invoices
 Time: 50-60 hours
 ```
 
-#### **Week 7: OCR Accuracy Improvement**
+**Note:** OCR is now a **fallback** for external invoices. Primary flow is in-app creation (Week 6).
+
+#### **Week 8: Invoice Management & Analytics**
 
 ```
 Backend:
-├── Add pre-processing hints to Textract
-├── Handle rotated/skewed images
-├── Fallback logic for low confidence
-└── Track extraction accuracy metrics
+├── GET /api/invoices (list with filters: date range, project, status)
+├── PUT /api/invoices/:id (edit existing invoice)
+├── DELETE /api/invoices/:id (soft delete)
+├── POST /api/invoices/:id/duplicate (quick create from existing)
+├── GET /api/invoices/stats (count, total value, by period)
+├── Invoice validation rules:
+│   ├── Duplicate invoice number check
+│   ├── GSTIN format validation
+│   ├── Amount range validation
+│   └── Required fields check
+└── Invoice search (by customer, invoice number, amount)
 
 Frontend:
-├── Image quality checker (blur detection)
-├── Retake photo option
-├── Manual entry fallback
-└── Accuracy dashboard for CA
+├── Invoice list screen (this month by default)
+│   ├── Search/filter (customer, date, amount)
+│   ├── Sort (date, amount, customer)
+│   └── Infinite scroll (for 100s of invoices)
+├── Invoice detail view
+├── Edit invoice form
+├── Duplicate invoice (one-tap create similar)
+├── Invoice stats cards:
+│   ├── This month: 250 invoices, ₹12.5L total
+│   ├── This week: 62 invoices
+│   └── Pending: 5 draft invoices
+└── Export invoices to Excel (for backup)
 
-Test: GSTIN extraction accuracy >85%
-Time: 40-50 hours
-```
-
-#### **Week 8: Invoice Data Management**
-
-```
-Backend:
-├── Invoice entity (separate from Document)
-├── POST /api/invoices (create from extracted data)
-├── GET /api/invoices (list with filters)
-├── PUT /api/invoices/:id (edit)
-└── Link invoice ↔ document
-
-Frontend:
-├── Invoice list screen
-├── Invoice detail/edit form
-├── HSN code dropdown (top 50 codes)
-└── Amount calculation (taxable + GST)
-
-Test: CA can create 1 month's invoices for 1 client (20-30 invoices)
+Test: Customer manages 50+ invoices, finds any invoice in <10 seconds
 Time: 50-60 hours
 ```
 
@@ -330,18 +448,26 @@ Time: 50-60 hours
 
 **GO Decision (Proceed to Phase 3):**
 
-- [ ] Processed 100+ real invoices through OCR
-- [ ] GSTIN accuracy >80% (allows 20% manual correction)
-- [ ] Invoice amount accuracy >70%
-- [ ] CA reports: "This saves us 30-50% data entry time"
-- [ ] Average processing time <30 seconds per invoice
+- [ ] 100+ invoices CREATED by customers (not OCR-extracted)
+- [ ] Customers prefer in-app creation over external tools
+- [ ] Average invoice creation time <2 minutes
+- [ ] Invoice PDF generation working (shared via WhatsApp)
+- [ ] Customers managing 50+ invoices comfortably
+- [ ] OCR working as fallback (>70% accuracy for GSTIN)
+- [ ] CA reports: "This saves us 50% data entry time"
+- [ ] Customer feedback: "Creating invoices is faster than before"
+
+**Critical Success Metric:**
+- **80%+ of invoices CREATED in-app** (not uploaded)
 
 **NO-GO Decision (Pivot or Fix):**
 
-- ❌ GSTIN accuracy <60% → Improve extraction or add manual flow
-- ❌ Textract costs >₹5,000/month → Reduce usage or find alternatives
-- ❌ CA says "manual entry is still faster" → Rethink OCR approach
-- ❌ Image quality issues in 50%+ uploads → Add quality guidance
+- ❌ Customers still creating invoices externally → Improve UX/speed
+- ❌ Invoice creation takes >5 minutes → Simplify flow
+- ❌ PDF generation failing → Fix urgently
+- ❌ WhatsApp sharing not working → Critical for adoption
+- ❌ Customer says "my old tool is easier" → Rethink UX
+- ❌ Textract costs >₹5,000/month → Reduce OCR usage
 
 ### Budget (Month 2)
 
@@ -835,9 +961,11 @@ Week 24+: Scale Validation
 
 #### Phase 2 (Week 8)
 
-- [ ] GSTIN extraction >80% accurate
-- [ ] Processed 100+ real invoices
-- [ ] CA confirms: "This saves time"
+- [ ] 100+ invoices CREATED by customers (not just uploaded)
+- [ ] 80%+ of invoices created in-app (vs external tools)
+- [ ] Invoice creation time <2 minutes
+- [ ] PDF generation + WhatsApp sharing working
+- [ ] Customer feedback: "Creating invoices is easier now"
 
 #### Phase 3 (Week 12)
 
@@ -987,25 +1115,112 @@ Do NOT build these until you have 10+ paying customers:
 
 ---
 
-## Summary: Validation-Driven Solo Roadmap
+## Summary: Validation-Driven Solo Roadmap (UPDATED)
 
-| Phase | Weeks  | Objective                      | Budget    | Validation                  |
-|-------|--------|--------------------------------|-----------|-----------------------------|
-| **0** | Week 0 | Find 2+ committed CA partners  | ₹0        | CA says "yes"               |
-| **1** | 1-4    | Auth + Upload working          | ₹1K       | CAs uploaded 10+ docs       |
-| **2** | 5-8    | OCR saves data entry time      | ₹700-3.5K | 80%+ GSTIN accuracy         |
-| **3** | 9-12   | CAs file GST using system      | ₹750-3.5K | 2-3 CAs used for full cycle |
-| **4** | 13-16  | First paying customer          | ₹1.7-5.4K | ₹3K+ MRR                    |
-| **5** | 17+    | Scale to 10, 30, 50+ customers | ₹6-60K/mo | Break-even, profitability   |
+| Phase | Weeks  | Objective                                     | Budget    | Validation                               |
+|-------|--------|-----------------------------------------------|-----------|------------------------------------------|
+| **0** | Week 0 | Find 2+ committed CA partners                 | ₹0        | CA says "yes" ✅ COMPLETED                |
+| **1** | 1-4    | Mobile app + Multi-project structure          | ₹1K       | CAs using mobile app daily               |
+| **2** | 5-8    | ⭐ Invoice generation (KILLER FEATURE)        | ₹700-3.5K | 100+ invoices CREATED (80%+ in-app)      |
+| **3** | 9-12   | Team collaboration + GSTR filing              | ₹750-3.5K | 2-3 CAs used for full GST cycle          |
+| **4** | 13-15  | First paying customer                         | ₹1.7-6K   | ₹3K+ MRR                                 |
+| **5** | 16+    | Scale to 10, 30, 50+ customers                | ₹6-60K/mo | Break-even, profitability                |
 
-**Total Investment (4 months):** ₹3,150-13,000
-**Time to First Revenue:** Week 13-16
-**Time to Break-Even:** Month 5-6
+**Total Investment (4 months):** ₹3,150-14,000
+**Time to First Revenue:** Week 13-15
+**Time to Break-Even:** Month 5
 **Time to Sustainability:** Month 9-12
+
+**Updated Timeline:** 15 weeks (was 12 weeks, +3 weeks for invoice generation + multi-project)
+**Updated Revenue:** ₹65K MRR at Month 6 (was ₹40K, +62% from invoice generation pricing)
+
+**Key Changes:**
+- ✅ Mobile app is CRITICAL (Expo for iOS + Android + Web)
+- ✅ Invoice generation is the killer feature (Phase 2)
+- ✅ Multi-project support (Phase 1)
+- ⚠️ Conversational AI deferred to Phase 6+ (needs training data)
 
 ---
 
-**Last Updated:** January 2025
+## Deferred Features (Phase 6+)
+
+### Conversational AI - DO NOT BUILD IN MVP ⚠️
+
+**CA Partner Request:** "Generate invoice for gold necklace 20 grams..."
+
+**Why Defer to Phase 6+ (Month 18+):**
+1. ❌ Need 10K+ invoices for training (don't have data yet)
+2. ❌ Need 6 months of usage patterns to understand workflows
+3. ❌ High development cost (₹5-10L if outsourced)
+4. ❌ Maintenance overhead (AI responses need monitoring)
+5. ❌ MVP works perfectly without it (forms are fast enough - 90 seconds!)
+
+**Build This First (Phase 2):**
+- Structured invoice form (fast, reliable)
+- Smart autocomplete (not AI, just search)
+- Template-based quick actions
+- Duplicate invoice feature (one-tap)
+- Voice input (device native, not AI)
+
+**Then Collect Data (Phase 3-5):**
+- Month 6-12: Collect 10K+ invoice creation patterns
+- Analyze: What products are used most?
+- Analyze: What customers buy together?
+- Analyze: Common pricing patterns?
+
+**Then Build AI (Phase 6+):**
+- Month 12+: Train AI model on actual data
+- Month 18+: Beta test conversational interface
+- Month 24+: Production AI features
+
+**Alternative for MVP:**
+```
+Instead of: "Hey Chanakya, create invoice for 15g gold necklace..."
+
+Use this:
+1. Tap "Duplicate Last Invoice" (most common use case)
+2. Change quantity: 15g
+3. Change customer
+4. Done in 30 seconds ✅
+
+OR
+
+1. Tap "Create Invoice"
+2. Select product from autocomplete (types "gol..." → suggests "Gold Necklace 22K")
+3. Enter quantity: 15
+4. Select customer
+5. Done in 90 seconds ✅
+```
+
+**Conclusion:** Forms are fast enough. Build AI later when you have training data and revenue.
+
+---
+
+## Other Deferred Features
+
+### Month 6+ (After 10+ Customers)
+- GSTR-2A/2B reconciliation
+- Three-way matching algorithm
+- Advanced analytics & dashboards
+- ITC eligibility calculator
+
+### Month 9+ (After 20+ Customers)
+- Tally integration (no official API, complex)
+- WhatsApp Business API (₹30-50K/month cost)
+- Payment tracking & reminders
+- Construction sector module
+
+### Year 2+ (After Product-Market Fit)
+- AI/ML-powered categorization
+- Predictive analytics
+- Natural language queries
+- Multi-branch operations
+- API for third-party integrations
+
+---
+
+**Last Updated:** January 2025 (Updated with CA Partner Feedback)
 **Document Owner:** Solo Founder
 **Review Frequency:** After each phase gate
 **Next Review:** After Week 4 validation checkpoint
+**Status:** Phase 0 ✅ COMPLETED → Ready for Phase 1 (Week 1)
