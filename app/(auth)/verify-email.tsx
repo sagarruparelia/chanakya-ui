@@ -169,7 +169,7 @@ export default function VerifyEmailScreen() {
             {/* Resend Link */}
             <XStack justifyContent="center" gap="$1" marginTop="$2">
               <Text color="$colorSecondary" fontSize={14}>
-                Didn't receive it?
+                Didn&apos;t receive it?
               </Text>
               <Text
                 color="$primary"

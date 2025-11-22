@@ -5,13 +5,17 @@ import type { AuthState, User } from '@/types';
 import { api } from './api';
 
 const TOKEN_KEY = 'chanakya_access_token';
+const REFRESH_TOKEN_KEY = 'chanakya_refresh_token';
 
 // Storage helpers
 const storage = {
   async getToken(): Promise<string | null> {
     if (Platform.OS === 'web') {
-      // On web, token is in memory only for security
-      return null;
+      try {
+        return localStorage.getItem(TOKEN_KEY);
+      } catch {
+        return null;
+      }
     }
     try {
       return await SecureStore.getItemAsync(TOKEN_KEY);
@@ -21,7 +25,11 @@ const storage = {
   },
   async setToken(token: string): Promise<void> {
     if (Platform.OS === 'web') {
-      // On web, token is in memory only
+      try {
+        localStorage.setItem(TOKEN_KEY, token);
+      } catch {
+        // Ignore storage errors
+      }
       return;
     }
     try {
@@ -32,15 +40,54 @@ const storage = {
   },
   async removeToken(): Promise<void> {
     if (Platform.OS === 'web') {
+      try {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+      } catch {
+        // Ignore storage errors
+      }
       return;
     }
     try {
       await SecureStore.deleteItemAsync(TOKEN_KEY);
+      await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+    } catch {
+      // Ignore storage errors
+    }
+  },
+  async getRefreshToken(): Promise<string | null> {
+    if (Platform.OS === 'web') {
+      try {
+        return localStorage.getItem(REFRESH_TOKEN_KEY);
+      } catch {
+        return null;
+      }
+    }
+    try {
+      return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+    } catch {
+      return null;
+    }
+  },
+  async setRefreshToken(token: string): Promise<void> {
+    if (Platform.OS === 'web') {
+      try {
+        localStorage.setItem(REFRESH_TOKEN_KEY, token);
+      } catch {
+        // Ignore storage errors
+      }
+      return;
+    }
+    try {
+      await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, token);
     } catch {
       // Ignore storage errors
     }
   },
 };
+
+// Export for use in initialization
+export { storage };
 
 const initialState: AuthState = {
   user: null,
@@ -82,8 +129,12 @@ const authSlice = createSlice({
     ) => {
       if (action.payload.token) {
         state.accessToken = action.payload.token;
+        // Keep loading true - we'll call getMe() to validate the token
+        state.isLoading = true;
+      } else {
+        // No token, not loading anymore
+        state.isLoading = false;
       }
-      state.isLoading = false;
     },
   },
   extraReducers: (builder) => {
@@ -96,6 +147,9 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.isLoading = false;
         storage.setToken(payload.accessToken);
+        if (payload.refreshToken) {
+          storage.setRefreshToken(payload.refreshToken);
+        }
       }
     );
 
@@ -107,6 +161,9 @@ const authSlice = createSlice({
         state.accessToken = payload.accessToken;
         state.isAuthenticated = true;
         storage.setToken(payload.accessToken);
+        if (payload.refreshToken) {
+          storage.setRefreshToken(payload.refreshToken);
+        }
       }
     );
 

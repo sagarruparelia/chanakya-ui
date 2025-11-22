@@ -6,7 +6,7 @@ export const config = {
 // App metadata
 export const appConfig = {
   name: 'Chanakya',
-  tagline: 'Your numbers, organized',
+  tagline: 'Simplify financial chaos',
   version: '1.0.0',
 };
 

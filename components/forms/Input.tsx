@@ -14,24 +14,24 @@ import { Pressable, TextInput } from 'react-native';
 const StyledInput = styled(TamaguiInput, {
   height: 52,
   borderWidth: 1,
-  borderColor: '$borderColorStrong',
-  backgroundColor: '$background',
+  borderColor: '#D1D5DB',
+  backgroundColor: '#F3F4F6',
   borderRadius: '$2',
   paddingHorizontal: '$4',
   fontSize: 16,
-  color: '$color',
-  placeholderTextColor: '$colorMuted',
+  color: '#111827',
+  placeholderTextColor: '#6B7280',
 
   focusStyle: {
-    borderColor: '$primary',
+    borderColor: '#1E3A5F',
     borderWidth: 2,
   },
 
   variants: {
     disabled: {
       true: {
-        backgroundColor: '$backgroundSubtle',
-        color: '$colorDisabled',
+        backgroundColor: '#E5E7EB',
+        color: '#9CA3AF',
         opacity: 0.7,
       },
     },
@@ -72,15 +72,9 @@ export const Input = forwardRef<TextInput, InputProps>(
           htmlFor={inputId}
           fontSize={14}
           fontWeight="600"
-          color="$color"
+          color="#111827"
         >
           {label}
-          {required && (
-            <Text color="$error" aria-hidden={true}>
-              {' '}
-              *
-            </Text>
-          )}
         </Label>
 
         <XStack alignItems="center" position="relative">

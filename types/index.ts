@@ -45,6 +45,7 @@ export interface User {
 export interface Tokens {
   accessToken: string;
   expiresIn: number;
+  refreshToken: number;
 }
 
 export interface AuthState {

@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { useEffect, useState } from 'react';
+import { useColorScheme, ActivityIndicator } from 'react-native';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { TamaguiProvider, Theme } from 'tamagui';
+import { TamaguiProvider, Theme, YStack, Text } from 'tamagui';
 import { Provider } from 'react-redux';
 import 'react-native-reanimated';
 
 import config from '../tamagui.config';
 import { store, useAppSelector, useAppDispatch } from '@/store';
-import { selectIsAuthenticated, selectAuthLoading, selectCurrentUser } from '@/store/authSlice';
+import { selectIsAuthenticated, selectAuthLoading, selectCurrentUser, initializeFromStorage, storage } from '@/store/authSlice';
 import { useLazyGetMeQuery } from '@/store/api';
 
 export const unstable_settings = {
@@ -17,21 +17,35 @@ export const unstable_settings = {
 };
 
 function AuthNavigator() {
+  const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isLoading = useAppSelector(selectAuthLoading);
   const user = useAppSelector(selectCurrentUser);
   const segments = useSegments();
   const router = useRouter();
   const [getMe] = useLazyGetMeQuery();
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Check auth on mount
+  // Initialize auth from storage on mount
   useEffect(() => {
-    getMe();
-  }, []);
+    const initAuth = async () => {
+      const token = await storage.getToken();
+      dispatch(initializeFromStorage({ token }));
+      setIsInitialized(true);
+
+      // If we have a stored token, validate it by fetching user info
+      if (token) {
+        getMe();
+      }
+    };
+
+    initAuth();
+  }, [dispatch, getMe]);
 
   // Handle navigation based on auth state
   useEffect(() => {
-    if (isLoading) return;
+    // Wait for initialization and loading to complete
+    if (!isInitialized || isLoading) return;
 
     const inAuthGroup = segments[0] === '(auth)';
 
@@ -60,7 +74,21 @@ function AuthNavigator() {
         router.replace('/(tabs)' as any);
       }
     }
-  }, [isAuthenticated, isLoading, segments, user]);
+  }, [isAuthenticated, isLoading, isInitialized, segments, user]);
+
+  // Show loading screen while initializing auth
+  if (!isInitialized || isLoading) {
+    return (
+      <YStack flex={1} justifyContent="center" alignItems="center" backgroundColor="$background">
+        <YStack alignItems="center" gap="$4">
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text color="$colorSecondary" fontSize={14}>
+            Loading...
+          </Text>
+        </YStack>
+      </YStack>
+    );
+  }
 
   return (
     <Stack screenOptions={{ headerShown: false }}>

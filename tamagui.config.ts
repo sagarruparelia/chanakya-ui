@@ -6,10 +6,10 @@ import { themes as tamaguiThemes } from '@tamagui/themes';
 // Design tokens from UX_ACCESSIBILITY_REQUIREMENTS.md
 const tokens = createTokens({
   color: {
-    // Primary
-    primary: '#0F4C81',
-    primaryHover: '#1A6CB3',
-    primaryPressed: '#0A3459',
+    // Primary - Chanakya Deep Blue from Figma
+    primary: '#1E3A5F',
+    primaryHover: '#2D5A8E',
+    primaryPressed: '#152A45',
     onPrimary: '#FFFFFF',
 
     // Secondary
