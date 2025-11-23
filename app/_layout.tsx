@@ -66,8 +66,12 @@ function AuthNavigator() {
             break;
           case 'ACTIVE':
           default:
-            // User is fully set up
-            router.replace('/(tabs)' as any);
+            // User is fully set up - route based on role
+            if (user.role === 'SYSTEM_ADMIN') {
+              router.replace('/(tabs)/admin-dashboard' as any);
+            } else {
+              router.replace('/(tabs)' as any);
+            }
             break;
         }
       } else {

@@ -90,7 +90,7 @@ export default function HomeScreen() {
             onPress={() => console.log('AI Assistant')}
             accessibilityLabel="Open AI Assistant"
           >
-            <Zap size={16} color={colors.businessPrimary} />
+            <Zap size={16} color={colors.businessPrimary as any} />
             <Text style={styles.aiButtonText}>Ask AI</Text>
           </Pressable>
         </View>
@@ -118,7 +118,7 @@ export default function HomeScreen() {
               accessibilityLabel="Upload Document"
             >
               <View style={[styles.actionIcon, { backgroundColor: colors.businessLight }]}>
-                <Upload size={20} color={colors.businessPrimary} />
+                <Upload size={20} color={colors.businessPrimary as any} />
               </View>
               <Text style={styles.actionText}>Upload</Text>
             </Pressable>
@@ -129,7 +129,7 @@ export default function HomeScreen() {
               accessibilityLabel="Create Invoice"
             >
               <View style={[styles.actionIcon, { backgroundColor: colors.businessLight }]}>
-                <Plus size={20} color={colors.businessPrimary} />
+                <Plus size={20} color={colors.businessPrimary as any} />
               </View>
               <Text style={styles.actionText}>Invoice</Text>
             </Pressable>
@@ -164,7 +164,7 @@ export default function HomeScreen() {
           >
             <View style={styles.alertContent}>
               <View style={styles.alertIconContainer}>
-                <FileText size={20} color={colors.warning} />
+                <FileText size={20} color={colors.warning as any} />
               </View>
               <View style={styles.alertTextContainer}>
                 <Text style={styles.alertTitle}>Pending CA Verification</Text>
@@ -173,7 +173,7 @@ export default function HomeScreen() {
                 </Text>
               </View>
             </View>
-            <ChevronRight size={20} color={colors.gray400} />
+            <ChevronRight size={20} color={colors.gray400 as any} />
           </Pressable>
         )}
 

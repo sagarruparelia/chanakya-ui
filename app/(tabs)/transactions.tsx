@@ -117,7 +117,7 @@ function InvoiceCard({ invoice }: InvoiceCardProps) {
         <View style={styles.expandToggle}>
           <ChevronDown
             size={16}
-            color={colors.gray400}
+            color={colors.gray400 as any}
             style={{ transform: [{ rotate: expanded ? '180deg' : '0deg' }] }}
           />
           <Text style={styles.expandText}>
@@ -150,7 +150,7 @@ function InvoiceCard({ invoice }: InvoiceCardProps) {
         onPress={() => console.log('View', invoice.id)}
         accessibilityLabel={`View invoice ${invoice.invoiceNo}`}
       >
-        <Eye size={16} color={colors.white} />
+        <Eye size={16} color={colors.white as any} />
         <Text style={styles.actionButtonText}>View Invoice</Text>
       </Pressable>
     </Card>
@@ -202,7 +202,7 @@ function BillCard({ bill }: BillCardProps) {
         <View style={styles.expandToggle}>
           <ChevronDown
             size={16}
-            color={colors.gray400}
+            color={colors.gray400 as any}
             style={{ transform: [{ rotate: expanded ? '180deg' : '0deg' }] }}
           />
           <Text style={styles.expandText}>
@@ -241,7 +241,7 @@ function BillCard({ bill }: BillCardProps) {
         onPress={() => console.log('View', bill.id)}
         accessibilityLabel={`View bill ${bill.billNo}`}
       >
-        <Eye size={16} color={colors.white} />
+        <Eye size={16} color={colors.white as any} />
         <Text style={styles.actionButtonText}>View Bill</Text>
       </Pressable>
     </Card>

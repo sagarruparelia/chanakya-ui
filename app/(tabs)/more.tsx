@@ -69,7 +69,7 @@ function MenuItem({
         )}
       </View>
       {showChevron && (
-        <ChevronRight size={20} color={colors.gray400} />
+        <ChevronRight size={20} color={colors.gray400 as any} />
       )}
     </Pressable>
   );
@@ -113,21 +113,21 @@ export default function MoreScreen() {
           <Text style={styles.sectionTitle}>Business</Text>
           <Card padding="none">
             <MenuItem
-              icon={<Briefcase size={20} color={colors.businessPrimary} />}
+              icon={<Briefcase size={20} color={colors.businessPrimary as any} />}
               label="Projects"
               description="Manage your projects"
               onPress={() => console.log('Projects')}
             />
             <View style={styles.divider} />
             <MenuItem
-              icon={<Users size={20} color={colors.businessPrimary} />}
+              icon={<Users size={20} color={colors.businessPrimary as any} />}
               label="Team Members"
               description="Invite and manage team"
               onPress={() => console.log('Team')}
             />
             <View style={styles.divider} />
             <MenuItem
-              icon={<FileText size={20} color={colors.businessPrimary} />}
+              icon={<FileText size={20} color={colors.businessPrimary as any} />}
               label="Reports"
               description="View financial reports"
               onPress={() => console.log('Reports')}
@@ -140,19 +140,19 @@ export default function MoreScreen() {
           <Text style={styles.sectionTitle}>Settings</Text>
           <Card padding="none">
             <MenuItem
-              icon={<Bell size={20} color={colors.gray600} />}
+              icon={<Bell size={20} color={colors.gray600 as any} />}
               label="Notifications"
               onPress={() => console.log('Notifications')}
             />
             <View style={styles.divider} />
             <MenuItem
-              icon={<Shield size={20} color={colors.gray600} />}
+              icon={<Shield size={20} color={colors.gray600 as any} />}
               label="Security"
               onPress={() => console.log('Security')}
             />
             <View style={styles.divider} />
             <MenuItem
-              icon={<Settings size={20} color={colors.gray600} />}
+              icon={<Settings size={20} color={colors.gray600 as any} />}
               label="Preferences"
               onPress={() => console.log('Preferences')}
             />
@@ -164,7 +164,7 @@ export default function MoreScreen() {
           <Text style={styles.sectionTitle}>Support</Text>
           <Card padding="none">
             <MenuItem
-              icon={<HelpCircle size={20} color={colors.gray600} />}
+              icon={<HelpCircle size={20} color={colors.gray600 as any} />}
               label="Help & Support"
               onPress={() => console.log('Help')}
             />
@@ -175,7 +175,7 @@ export default function MoreScreen() {
         <View style={styles.section}>
           <Card padding="none">
             <MenuItem
-              icon={<LogOut size={20} color={colors.error} />}
+              icon={<LogOut size={20} color={colors.error as any} />}
               label="Log Out"
               onPress={handleLogout}
               showChevron={false}

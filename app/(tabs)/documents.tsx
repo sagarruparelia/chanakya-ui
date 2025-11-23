@@ -119,7 +119,7 @@ function DocumentCard({ document }: DocumentCardProps) {
     >
       <View style={styles.documentHeader}>
         <View style={styles.iconContainer}>
-          <IconComponent size={24} color={colors.businessPrimary} />
+          <IconComponent size={24} color={colors.businessPrimary as any} />
         </View>
         <View style={styles.documentInfo}>
           <Text style={styles.documentName} numberOfLines={1}>
@@ -161,14 +161,14 @@ export default function DocumentsScreen() {
             onPress={() => console.log('Search')}
             accessibilityLabel="Search documents"
           >
-            <Search size={20} color={colors.gray600} />
+            <Search size={20} color={colors.gray600 as any} />
           </Pressable>
           <Pressable
             style={styles.headerButton}
             onPress={() => console.log('Filter')}
             accessibilityLabel="Filter documents"
           >
-            <Filter size={20} color={colors.gray600} />
+            <Filter size={20} color={colors.gray600 as any} />
           </Pressable>
         </View>
       </View>
@@ -179,7 +179,7 @@ export default function DocumentsScreen() {
         onPress={() => console.log('Upload document')}
         accessibilityLabel="Upload new document"
       >
-        <Upload size={20} color={colors.white} />
+        <Upload size={20} color={colors.white as any} />
         <Text style={styles.uploadButtonText}>Upload Document</Text>
       </Pressable>
 
@@ -199,7 +199,7 @@ export default function DocumentsScreen() {
         }
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <FileText size={48} color={colors.gray300} />
+            <FileText size={48} color={colors.gray300 as any} />
             <Text style={styles.emptyTitle}>No documents yet</Text>
             <Text style={styles.emptySubtext}>
               Upload your first document to get started

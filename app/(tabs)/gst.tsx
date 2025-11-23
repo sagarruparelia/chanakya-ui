@@ -83,7 +83,7 @@ export default function GSTScreen() {
             onPress={() => navigateMonth('prev')}
             accessibilityLabel="Previous month"
           >
-            <ChevronLeft size={24} color={colors.gray600} />
+            <ChevronLeft size={24} color={colors.gray600 as any} />
           </Pressable>
           <Text style={styles.monthText}>{mockGSTData.month}</Text>
           <Pressable
@@ -91,7 +91,7 @@ export default function GSTScreen() {
             onPress={() => navigateMonth('next')}
             accessibilityLabel="Next month"
           >
-            <ChevronRight size={24} color={colors.gray600} />
+            <ChevronRight size={24} color={colors.gray600 as any} />
           </Pressable>
         </View>
 
@@ -105,14 +105,14 @@ export default function GSTScreen() {
         >
           <View style={styles.filingContent}>
             {mockGSTData.filingStatus === 'filed' ? (
-              <CheckCircle size={20} color={colors.statusSuccessText} />
+              <CheckCircle size={20} color={colors.statusSuccessText as any} />
             ) : (
               <Clock
                 size={20}
                 color={
-                  mockGSTData.filingStatus === 'overdue'
+                  (mockGSTData.filingStatus === 'overdue'
                     ? colors.statusErrorText
-                    : colors.statusWarningText
+                    : colors.statusWarningText) as any
                 }
               />
             )}
@@ -147,7 +147,7 @@ export default function GSTScreen() {
         <View style={styles.summaryContainer}>
           <Card style={styles.summaryCard}>
             <View style={styles.summaryIconContainer}>
-              <ArrowUp size={16} color={colors.error} />
+              <ArrowUp size={16} color={colors.error as any} />
             </View>
             <Text style={styles.summaryLabel}>Output GST</Text>
             <Text style={styles.summaryValue}>{formatCurrency(mockGSTData.outputGST)}</Text>
@@ -156,7 +156,7 @@ export default function GSTScreen() {
 
           <Card style={styles.summaryCard}>
             <View style={[styles.summaryIconContainer, { backgroundColor: colors.businessLight }]}>
-              <ArrowDown size={16} color={colors.businessPrimary} />
+              <ArrowDown size={16} color={colors.businessPrimary as any} />
             </View>
             <Text style={styles.summaryLabel}>Input GST</Text>
             <Text style={[styles.summaryValue, { color: colors.businessPrimary }]}>
@@ -183,7 +183,7 @@ export default function GSTScreen() {
         {mockGSTData.pendingVerification > 0 && (
           <Card style={styles.verificationCard}>
             <View style={styles.verificationContent}>
-              <Clock size={20} color={colors.warning} />
+              <Clock size={20} color={colors.warning as any} />
               <View style={styles.verificationText}>
                 <Text style={styles.verificationTitle}>Pending CA Verification</Text>
                 <Text style={styles.verificationSubtext}>
