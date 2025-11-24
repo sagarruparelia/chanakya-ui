@@ -11,6 +11,7 @@ import config from '../tamagui.config';
 import { store, useAppSelector, useAppDispatch } from '@/store';
 import { selectIsAuthenticated, selectAuthLoading, selectCurrentUser, initializeFromStorage, storage } from '@/store/authSlice';
 import { useLazyGetMeQuery } from '@/store/api';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 export const unstable_settings = {
   initialRouteName: '(auth)',
@@ -122,7 +123,9 @@ function RootLayoutContent() {
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <RootLayoutContent />
+      <AuthProvider>
+        <RootLayoutContent />
+      </AuthProvider>
     </Provider>
   );
 }
