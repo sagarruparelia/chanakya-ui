@@ -58,10 +58,12 @@ export interface AuthState {
 // Request/Response types
 export interface SignupRequest {
   inviteToken: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  phone?: string;
+  phone: string;
+  dateOfBirth: string;  // YYYY-MM-DD format
   firmName?: string;    // For CA_OWNER signup
   firmGstin?: string;   // For CA_OWNER signup
 }
