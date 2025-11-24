@@ -1,6 +1,6 @@
 // API configuration
 export const config = {
-  apiUrl: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080',
+  apiUrl: process.env.EXPO_PUBLIC_API_URL || 'https://api.taxchanakya.in',
 };
 
 // App metadata

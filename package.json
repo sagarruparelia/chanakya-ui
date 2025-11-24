@@ -8,7 +8,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "build:web": "npx expo export --platform web",
+    "deploy": "npm run build:web && aws s3 sync dist/ s3://taxchanakya-web --delete",
+    "deploy:invalidate": "npm run deploy && aws cloudfront create-invalidation --distribution-id E31QBQ1P2E6VLF --paths '/*'"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
