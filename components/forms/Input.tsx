@@ -122,8 +122,8 @@ export const Input = forwardRef<TextInput, InputProps>(
               id={errorId}
               fontSize={12}
               color="$error"
-              accessibilityRole="alert"
-              accessibilityLiveRegion="polite"
+              role="alert"
+              aria-live="polite"
             >
               {error}
             </Text>

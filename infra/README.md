@@ -183,9 +183,76 @@ aws cloudfront create-invalidation \
   --paths "/*"
 ```
 
+## CORS Configuration
+
+The infrastructure is configured to allow cross-origin resource sharing:
+
+### S3 CORS Rules
+
+- **Allowed Origins**: `*` (all domains)
+- **Allowed Methods**: `GET`, `HEAD`, `OPTIONS`, `POST`, `PUT`
+- **Allowed Headers**: All
+- **Exposed Headers**: `ETag`, `Content-Length`, `Content-Type`, `Access-Control-Allow-Origin`
+
+### CloudFront CORS (when enabled)
+
+- CloudFront forwards CORS headers from S3
+- Response headers policy ensures proper CORS headers
+- OPTIONS requests are cached for performance
+
+### Testing CORS
+
+From an external domain's console:
+
+```javascript
+// Test loading a JS file
+fetch('https://your-bucket.s3.ap-south-1.amazonaws.com/main.js')
+  .then(r => r.text())
+  .then(console.log)
+  .catch(console.error);
+
+// Test with explicit origin
+fetch('https://your-bucket.s3.ap-south-1.amazonaws.com/main.js', {
+  mode: 'cors',
+  headers: {
+    'Origin': 'https://external-domain.com'
+  }
+})
+  .then(r => r.text())
+  .then(console.log)
+  .catch(console.error);
+```
+
+### Using with `<script>` tags
+
+External websites can load your JS files directly:
+
+```html
+<!-- From any external domain -->
+<script src="https://your-bucket.s3.ap-south-1.amazonaws.com/bundle.js"></script>
+<script src="https://your-bucket.s3.ap-south-1.amazonaws.com/main.js"></script>
+```
+
+### Restricting to Specific Domains (Optional)
+
+To limit CORS to specific domains, modify `main.tf`:
+
+```hcl
+cors_rule {
+  allowed_origins = [
+    "https://example.com",
+    "https://www.example.com",
+    "https://partner-site.com"
+  ]
+  # ... rest of config
+}
+```
+
 ## Security Notes
 
 - S3 bucket has public read access for website hosting
 - CloudFront uses OAI (Origin Access Identity) for better security
 - HTTPS is enforced when CloudFront is enabled
 - Old versions are automatically deleted after 30 days
+- CORS is configured to allow all origins (can be restricted)
+- Security headers included (XSS protection, frame options, etc.)

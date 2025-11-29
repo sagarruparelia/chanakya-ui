@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Calendar } from '@tamagui/lucide-icons';
+import { ArrowLeft, Calendar, Check } from '@tamagui/lucide-icons';
 import { useState, createElement } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -33,8 +33,9 @@ const signupSchema = z
       .email('Please enter a valid email address'),
     phone: z
       .string()
-      .min(1, 'Phone number is required')
-      .regex(/^\+?[1-9]\d{9,14}$/, 'Please enter a valid phone number'),
+      .regex(/^\+?[1-9]\d{9,14}$/, 'Please enter a valid phone number')
+      .optional()
+      .or(z.literal('')),
     dateOfBirth: z
       .date({ message: 'Date of birth is required' }),
     password: z
@@ -46,6 +47,11 @@ const signupSchema = z
         'Password must include uppercase, lowercase, and number'
       ),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
+    termsAccepted: z
+      .boolean()
+      .refine((val) => val === true, {
+        message: 'You must accept the terms and conditions',
+      }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
@@ -76,14 +82,16 @@ export default function SignupScreen() {
       dateOfBirth: undefined,
       password: '',
       confirmPassword: '',
+      termsAccepted: false,
     },
   });
 
   const dateOfBirth = watch('dateOfBirth');
+  const password = watch('password');
 
   const onSubmit = async (data: SignupFormData) => {
     try {
-      const { confirmPassword, ...signupData } = data;
+      const { confirmPassword, termsAccepted, ...signupData } = data;
       // Format date as ISO string for API
       const formattedData = {
         ...signupData,
@@ -256,7 +264,6 @@ export default function SignupScreen() {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     error={errors.phone?.message}
-                    required
                     keyboardType="phone-pad"
                     autoComplete="tel"
                     textContentType="telephoneNumber"
@@ -366,6 +373,9 @@ export default function SignupScreen() {
                 )}
               />
 
+              {/* Password Strength Indicator */}
+              <PasswordStrengthIndicator password={password} />
+
               {/* Confirm Password */}
               <Controller
                 control={control}
@@ -383,6 +393,69 @@ export default function SignupScreen() {
                     textContentType="newPassword"
                     editable={!isLoading}
                   />
+                )}
+              />
+
+              {/* Terms and Conditions */}
+              <Controller
+                control={control}
+                name="termsAccepted"
+                render={({ field: { value, onChange } }) => (
+                  <YStack gap="$2">
+                    <XStack
+                      alignItems="center"
+                      gap="$3"
+                      onPress={() => onChange(!value)}
+                    >
+                      <Pressable
+                        onPress={() => onChange(!value)}
+                        hitSlop={10}
+                        accessibilityLabel="Accept terms and conditions"
+                        accessibilityRole="checkbox"
+                        accessibilityState={{ checked: value }}
+                      >
+                        <View
+                          width={20}
+                          height={20}
+                          borderRadius="$1"
+                          borderWidth={2}
+                          borderColor={errors.termsAccepted ? 'red' : '#ccc'}
+                          backgroundColor={value ? '#3d4f6f' : 'transparent'}
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          {value && <Check size={14} color="white" />}
+                        </View>
+                      </Pressable>
+                      <Text
+                        fontSize={12}
+                        color="#666"
+                        flex={1}
+                        onPress={() => onChange(!value)}
+                      >
+                        I agree to the{' '}
+                        <Text
+                          textDecorationLine="underline"
+                          onPress={() => router.push('/terms-of-service' as any)}
+                        >
+                          Terms of Service
+                        </Text>{' '}
+                        and{' '}
+                        <Text
+                          textDecorationLine="underline"
+                          onPress={() => router.push('/privacy-policy' as any)}
+                        >
+                          Privacy Policy
+                        </Text>
+                        .
+                      </Text>
+                    </XStack>
+                    {errors.termsAccepted && (
+                      <Text color="red" fontSize={12} marginLeft="$5">
+                        {errors.termsAccepted.message}
+                      </Text>
+                    )}
+                  </YStack>
                 )}
               />
 
@@ -426,5 +499,36 @@ export default function SignupScreen() {
         </YStack>
       </ScrollView>
     </KeyboardAvoidingView>
+  );
+}
+
+// Password strength component
+function PasswordStrengthIndicator({ password = '' }: { password?: string }) {
+  const criteria = [
+    { label: 'At least 8 characters', regex: /.{8,}/ },
+    { label: 'An uppercase letter', regex: /[A-Z]/ },
+    { label: 'A lowercase letter', regex: /[a-z]/ },
+    { label: 'A number', regex: /\d/ },
+  ];
+
+  return (
+    <YStack gap="$2" paddingHorizontal="$1" marginTop="$1">
+      {criteria.map((criterion, index) => {
+        const met = criterion.regex.test(password);
+        return (
+          <XStack key={index} alignItems="center" gap="$2">
+            <Check
+              size={16}
+              color={met ? '$green10' : '$gray8'}
+              animation="bouncy"
+              key={met ? 'met' : 'unmet'}
+            />
+            <Text fontSize={12} color={met ? '$green11' : '$gray10'}>
+              {criterion.label}
+            </Text>
+          </XStack>
+        );
+      })}
+    </YStack>
   );
 }

@@ -6,6 +6,79 @@ resource "aws_cloudfront_origin_access_identity" "web_deployment" {
   comment = "Origin access identity for ${var.bucket_name}"
 }
 
+# CloudFront Response Headers Policy for CORS
+resource "aws_cloudfront_response_headers_policy" "cors_policy" {
+  count   = var.enable_cloudfront ? 1 : 0
+  name    = "${var.bucket_name}-cors-policy"
+  comment = "CORS policy for ${var.bucket_name}"
+
+  cors_config {
+    access_control_allow_credentials = false
+
+    access_control_allow_headers {
+      items = ["*"]
+    }
+
+    access_control_allow_methods {
+      items = ["GET", "HEAD", "OPTIONS", "POST", "PUT"]
+    }
+
+    access_control_allow_origins {
+      items = ["*"]
+    }
+
+    access_control_expose_headers {
+      items = ["ETag", "Content-Length", "Content-Type"]
+    }
+
+    access_control_max_age_sec = 3600
+    origin_override            = true
+  }
+
+  custom_headers_config {
+    items {
+      header   = "X-Frame-Options"
+      value    = "SAMEORIGIN"
+      override = true
+    }
+
+    items {
+      header   = "X-Content-Type-Options"
+      value    = "nosniff"
+      override = true
+    }
+  }
+
+  security_headers_config {
+    content_type_options {
+      override = true
+    }
+
+    frame_options {
+      frame_option = "SAMEORIGIN"
+      override     = true
+    }
+
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      include_subdomains         = true
+      preload                    = true
+      override                   = true
+    }
+
+    xss_protection {
+      mode_block = true
+      protection = true
+      override   = true
+    }
+  }
+}
+
 resource "aws_cloudfront_distribution" "web_deployment" {
   count   = var.enable_cloudfront ? 1 : 0
   enabled = true
@@ -25,11 +98,12 @@ resource "aws_cloudfront_distribution" "web_deployment" {
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-    cached_methods   = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD", "OPTIONS"]
     target_origin_id = "S3-${aws_s3_bucket.web_deployment.id}"
 
     forwarded_values {
       query_string = false
+      headers      = ["Origin", "Access-Control-Request-Headers", "Access-Control-Request-Method"]
 
       cookies {
         forward = "none"
@@ -41,6 +115,32 @@ resource "aws_cloudfront_distribution" "web_deployment" {
     default_ttl            = 3600
     max_ttl                = 86400
     compress               = true
+
+    # Enable CORS headers
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.cors_policy[0].id
+  }
+
+  # Cache OPTIONS requests
+  ordered_cache_behavior {
+    path_pattern     = "*"
+    allowed_methods  = ["OPTIONS"]
+    cached_methods   = ["OPTIONS"]
+    target_origin_id = "S3-${aws_s3_bucket.web_deployment.id}"
+
+    forwarded_values {
+      query_string = false
+      headers      = ["Origin", "Access-Control-Request-Headers", "Access-Control-Request-Method"]
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 0
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    compress               = false
+    viewer_protocol_policy = "redirect-to-https"
   }
 
   # SPA routing - serve index.html for 404s

@@ -82,16 +82,37 @@ resource "aws_s3_bucket_policy" "web_deployment" {
   depends_on = [aws_s3_bucket_public_access_block.web_deployment]
 }
 
-# CORS configuration for API calls
+# CORS configuration for cross-origin resource sharing
 resource "aws_s3_bucket_cors_configuration" "web_deployment" {
   bucket = aws_s3_bucket.web_deployment.id
 
+  # Allow all origins to load JS/CSS/assets
+  cors_rule {
+    allowed_headers = [
+      "Authorization",
+      "Content-Type",
+      "Accept",
+      "Origin",
+      "X-Requested-With"
+    ]
+    allowed_methods = ["GET", "HEAD", "OPTIONS"]
+    allowed_origins = ["*"]
+    expose_headers = [
+      "ETag",
+      "Content-Length",
+      "Content-Type",
+      "Access-Control-Allow-Origin"
+    ]
+    max_age_seconds = 3600
+  }
+
+  # Separate rule for POST requests (if needed for forms)
   cors_rule {
     allowed_headers = ["*"]
-    allowed_methods = ["GET", "HEAD"]
+    allowed_methods = ["POST", "PUT"]
     allowed_origins = ["*"]
     expose_headers  = ["ETag"]
-    max_age_seconds = 3000
+    max_age_seconds = 3600
   }
 }
 
