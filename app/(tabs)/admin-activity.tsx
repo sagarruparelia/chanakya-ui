@@ -52,7 +52,7 @@ const mockActivities = [
     type: 'subscription_updated',
     title: 'Subscription upgraded',
     description: 'XYZ Enterprises upgraded to Enterprise plan',
-    actor: 'admin@chanakya.com',
+    actor: '',
     timestamp: '2024-11-22T12:15:00',
     metadata: {
       customer: 'XYZ Enterprises',
@@ -76,7 +76,7 @@ const mockActivities = [
     type: 'license_generated',
     title: 'License generated',
     description: 'New license created for Sharma & Associates',
-    actor: 'admin@chanakya.com',
+    actor: '',
     timestamp: '2024-11-21T10:30:00',
     metadata: {
       customer: 'Sharma & Associates',

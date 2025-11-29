@@ -158,7 +158,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
           </View>
           <View style={styles.userInfo}>
             <Text style={styles.userName}>{user?.name || 'Super Admin'}</Text>
-            <Text style={styles.userEmail}>{user?.email || 'admin@chanakya.com'}</Text>
+            <Text style={styles.userEmail}>{user?.email || ''}</Text>
           </View>
         </View>
 
