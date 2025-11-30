@@ -16,9 +16,13 @@ import { useSignupMutation } from '@/store/api';
 // Validation schema
 const signupSchema = z
   .object({
-    inviteToken: z
-      .string()
-      .min(1, 'Invite token is required'),
+    inviteToken: z.string().optional(),
+    customerType: z.enum(['CA_ORG', 'ENTERPRISE', 'INDIVIDUAL'], {
+      required_error: 'Please select account type',
+    }),
+    organizationName: z.string().optional(),
+    gstin: z.string().optional(),
+    pan: z.string().optional(),
     firstName: z
       .string()
       .min(1, 'First name is required')
@@ -56,6 +60,17 @@ const signupSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
+  })
+  .refine((data) => {
+    // Organization name is required for CA_ORG and ENTERPRISE
+    if ((data.customerType === 'CA_ORG' || data.customerType === 'ENTERPRISE') &&
+        (!data.organizationName || data.organizationName.trim() === '')) {
+      return false;
+    }
+    return true;
+  }, {
+    message: 'Organization name is required',
+    path: ['organizationName'],
   });
 
 type SignupFormData = z.infer<typeof signupSchema>;
@@ -74,7 +89,11 @@ export default function SignupScreen() {
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      inviteToken: params.token || '',
+      inviteToken: params.token || undefined,
+      customerType: undefined,
+      organizationName: '',
+      gstin: '',
+      pan: '',
       firstName: '',
       lastName: '',
       email: params.email || '',
@@ -88,6 +107,7 @@ export default function SignupScreen() {
 
   const dateOfBirth = watch('dateOfBirth');
   const password = watch('password');
+  const customerType = watch('customerType');
 
   const onSubmit = async (data: SignupFormData) => {
     try {
@@ -97,8 +117,14 @@ export default function SignupScreen() {
         ...signupData,
         dateOfBirth: data.dateOfBirth.toISOString().split('T')[0], // YYYY-MM-DD format
       };
-      await signup(formattedData).unwrap();
-      router.replace('/(tabs)' as any);
+      const response = await signup(formattedData).unwrap();
+
+      // Check if account is pending approval
+      if (response.user?.status === 'PENDING_APPROVAL') {
+        router.replace('/(auth)/pending-approval' as any);
+      } else {
+        router.replace('/(tabs)' as any);
+      }
     } catch (err) {
       // Error is handled by RTK Query
     }
@@ -185,7 +211,95 @@ export default function SignupScreen() {
               {/* Error Banner */}
               {errorMessage && <ErrorBanner message={errorMessage} />}
 
-              {/* Invite Token is handled by react-hook-form defaultValues */}
+              {/* Account Type Selection */}
+              <Controller
+                control={control}
+                name="customerType"
+                render={({ field: { onChange, value } }) => (
+                  <YStack gap="$2">
+                    <Text fontSize={14} fontWeight="500" color="#000">
+                      Account Type <Text color="red">*</Text>
+                    </Text>
+                    <XStack gap="$2" flexWrap="wrap">
+                      {[
+                        { value: 'CA_ORG' as const, label: 'CA Firm' },
+                        { value: 'ENTERPRISE' as const, label: 'Enterprise' },
+                        { value: 'INDIVIDUAL' as const, label: 'Individual' },
+                      ].map((type) => (
+                        <Pressable
+                          key={type.value}
+                          onPress={() => onChange(type.value)}
+                          style={{ flex: 1, minWidth: 100 }}
+                        >
+                          <XStack
+                            backgroundColor={value === type.value ? '#3d4f6f' : 'white'}
+                            borderWidth={2}
+                            borderColor={value === type.value ? '#3d4f6f' : '#e0e0e0'}
+                            borderRadius="$2"
+                            padding="$3"
+                            justifyContent="center"
+                            alignItems="center"
+                          >
+                            <Text
+                              color={value === type.value ? 'white' : '#666'}
+                              fontWeight="600"
+                              fontSize={14}
+                            >
+                              {type.label}
+                            </Text>
+                          </XStack>
+                        </Pressable>
+                      ))}
+                    </XStack>
+                    {errors.customerType && (
+                      <Text color="red" fontSize={12}>
+                        {errors.customerType.message}
+                      </Text>
+                    )}
+                  </YStack>
+                )}
+              />
+
+              {/* Organization Name (for CA_ORG and ENTERPRISE) */}
+              {(customerType === 'CA_ORG' || customerType === 'ENTERPRISE') && (
+                <Controller
+                  control={control}
+                  name="organizationName"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      label="Organization Name"
+                      placeholder={customerType === 'CA_ORG' ? 'ABC & Associates' : 'Your Company Name'}
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      error={errors.organizationName?.message}
+                      required
+                      autoCapitalize="words"
+                      editable={!isLoading}
+                    />
+                  )}
+                />
+              )}
+
+              {/* GSTIN (optional for organizations) */}
+              {(customerType === 'CA_ORG' || customerType === 'ENTERPRISE') && (
+                <Controller
+                  control={control}
+                  name="gstin"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      label="GSTIN"
+                      placeholder="27AABCA1234A1Z5"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      error={errors.gstin?.message}
+                      autoCapitalize="characters"
+                      editable={!isLoading}
+                    />
+                  )}
+                />
+              )}
 
               {/* First Name */}
               <Controller
