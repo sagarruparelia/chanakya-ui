@@ -1,17 +1,18 @@
+import { useState, createElement } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Pressable } from 'react-native';
-import { YStack, XStack, Text, H2, Separator, View } from 'tamagui';
+import { YStack, XStack, Text, H1, H2, Separator, View } from 'tamagui';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Calendar, Check } from '@tamagui/lucide-icons';
-import { useState, createElement } from 'react';
+import { UserPlus, ArrowLeft, Calendar, Check } from '@tamagui/lucide-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { Input, PasswordInput } from '@/components/forms/Input';
 import { Button } from '@/components/ui/Button';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
 import { useSignupMutation } from '@/store/api';
+import { colors, spacing, typography } from '@/constants/theme';
 
 // Validation schema
 const signupSchema = z
@@ -143,9 +144,9 @@ export default function SignupScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: colors.gray50 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      keyboardVerticalOffset={0}
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -154,60 +155,118 @@ export default function SignupScreen() {
       >
         <YStack
           flex={1}
-          backgroundColor="#3d4f6f"
           padding="$4"
           paddingTop="$6"
+          paddingBottom="$8"
+          $gtSm={{
+            paddingHorizontal: '$8',
+          }}
         >
           {/* Back to login */}
           <Pressable
             onPress={() => router.push('/login')}
-            accessibilityRole="button"
-            accessibilityLabel="Back to login"
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            hitSlop={spacing.sm}
           >
-            <XStack alignItems="center" gap="$2" marginBottom="$4">
-              <ArrowLeft size={20} color="white" />
-              <Text color="white" fontSize={16}>
+            <XStack alignItems="center" gap="$2" marginBottom="$6">
+              <ArrowLeft size={20} color={colors.gray700 as any} />
+              <Text color={colors.gray700 as any} fontSize={typography.base} fontWeight="500">
                 Back to login
               </Text>
             </XStack>
           </Pressable>
 
-          {/* Card Container */}
+          {/* Container with max width */}
           <YStack
-            backgroundColor="white"
-            borderRadius="$4"
-            padding="$5"
-            paddingTop="$6"
-            alignItems="center"
-            $gtSm={{
-              maxWidth: 480,
-              alignSelf: 'center',
-              width: '100%',
-            }}
+            width="100%"
+            maxWidth={540}
+            alignSelf="center"
+            gap="$6"
           >
-            {/* Calendar Icon */}
-            <View
-              backgroundColor="#f0f0f0"
-              padding="$3"
-              borderRadius="$3"
-              marginBottom="$4"
-            >
-              <Calendar size={24} color="#3d4f6f" />
-            </View>
+            {/* Logo and Header */}
+            <YStack alignItems="center" gap="$5">
+              {/* Brand Logo */}
+              <YStack alignItems="center" gap="$3">
+                <YStack
+                  width={100}
+                  height={100}
+                  backgroundColor={colors.caPrimary as any}
+                  borderRadius="$8"
+                  alignItems="center"
+                  justifyContent="center"
+                  shadowColor={colors.caPrimary}
+                  shadowOffset={{ width: 0, height: 12 }}
+                  shadowOpacity={0.4}
+                  shadowRadius={20}
+                  elevation={10}
+                  borderWidth={4}
+                  borderColor="white"
+                >
+                  <Text
+                    fontSize={40}
+                    fontWeight="900"
+                    color="white"
+                    letterSpacing={-1}
+                  >
+                    TC
+                  </Text>
+                </YStack>
 
-            {/* Title */}
-            <H2
-              fontSize={24}
-              fontWeight="600"
-              color="#3d4f6f"
-              marginBottom="$4"
-            >
-              Create your account
-            </H2>
+                {/* Brand Name */}
+                <YStack alignItems="center" gap="$1">
+                  <Text
+                    fontSize={typography['2xl']}
+                    fontWeight="800"
+                    color={colors.caPrimary as any}
+                    letterSpacing={-0.5}
+                  >
+                    Tax Chanakya
+                  </Text>
+                  <Text
+                    fontSize={typography.sm}
+                    fontWeight="600"
+                    color={colors.gray500 as any}
+                    letterSpacing={1}
+                    textTransform="uppercase"
+                  >
+                    GST Compliance Made Simple
+                  </Text>
+                </YStack>
+              </YStack>
 
-            {/* Form */}
-            <YStack gap="$3" width="100%">
+              {/* Welcome Message */}
+              <YStack gap="$2" alignItems="center" marginTop="$2">
+                <H1
+                  fontSize={typography['2xl']}
+                  fontWeight="700"
+                  color={colors.gray900 as any}
+                  textAlign="center"
+                >
+                  Create your account
+                </H1>
+                <Text
+                  fontSize={typography.base}
+                  color={colors.gray600 as any}
+                  textAlign="center"
+                >
+                  Join Tax Chanakya and streamline your GST compliance
+                </Text>
+              </YStack>
+            </YStack>
+
+            {/* Signup Card */}
+            <YStack
+              backgroundColor="white"
+              borderRadius="$6"
+              padding="$6"
+              gap="$5"
+              borderWidth={1}
+              borderColor={colors.gray200 as any}
+              shadowColor="black"
+              shadowOffset={{ width: 0, height: 2 }}
+              shadowOpacity={0.05}
+              shadowRadius={8}
+              elevation={2}
+            >
               {/* Error Banner */}
               {errorMessage && <ErrorBanner message={errorMessage} />}
 
@@ -217,8 +276,8 @@ export default function SignupScreen() {
                 name="customerType"
                 render={({ field: { onChange, value } }) => (
                   <YStack gap="$2">
-                    <Text fontSize={14} fontWeight="500" color="#000">
-                      Account Type <Text color="red">*</Text>
+                    <Text fontSize={typography.sm} fontWeight="600" color={colors.gray700 as any}>
+                      Account Type <Text color={colors.error as any}>*</Text>
                     </Text>
                     <XStack gap="$2" flexWrap="wrap">
                       {[
@@ -231,28 +290,28 @@ export default function SignupScreen() {
                           onPress={() => onChange(type.value)}
                           style={{ flex: 1, minWidth: 100 }}
                         >
-                          <XStack
-                            backgroundColor={value === type.value ? '#3d4f6f' : 'white'}
+                          <YStack
+                            backgroundColor={value === type.value ? (colors.caPrimary as any) : 'white'}
                             borderWidth={2}
-                            borderColor={value === type.value ? '#3d4f6f' : '#e0e0e0'}
-                            borderRadius="$2"
+                            borderColor={value === type.value ? (colors.caPrimary as any) : (colors.gray300 as any)}
+                            borderRadius="$3"
                             padding="$3"
-                            justifyContent="center"
                             alignItems="center"
+                            justifyContent="center"
                           >
                             <Text
-                              color={value === type.value ? 'white' : '#666'}
+                              color={value === type.value ? 'white' : (colors.gray700 as any)}
                               fontWeight="600"
-                              fontSize={14}
+                              fontSize={typography.sm}
                             >
                               {type.label}
                             </Text>
-                          </XStack>
+                          </YStack>
                         </Pressable>
                       ))}
                     </XStack>
                     {errors.customerType && (
-                      <Text color="red" fontSize={12}>
+                      <Text color={colors.error as any} fontSize={typography.xs}>
                         {errors.customerType.message}
                       </Text>
                     )}
@@ -260,255 +319,309 @@ export default function SignupScreen() {
                 )}
               />
 
-              {/* Organization Name (for CA_ORG and ENTERPRISE) */}
+              {/* Organization Details Section */}
               {(customerType === 'CA_ORG' || customerType === 'ENTERPRISE') && (
+                <YStack gap="$4" padding="$4" backgroundColor={colors.gray50 as any} borderRadius="$4">
+                  <H2 fontSize={typography.lg} fontWeight="600" color={colors.gray800 as any}>
+                    Organization Details
+                  </H2>
+
+                  {/* Organization Name */}
+                  <Controller
+                    control={control}
+                    name="organizationName"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        label="Organization Name"
+                        placeholder={customerType === 'CA_ORG' ? 'ABC & Associates' : 'Your Company Name'}
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        error={errors.organizationName?.message}
+                        required
+                        autoCapitalize="words"
+                        editable={!isLoading}
+                      />
+                    )}
+                  />
+
+                  {/* GSTIN */}
+                  <Controller
+                    control={control}
+                    name="gstin"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        label="GSTIN"
+                        placeholder="27AABCA1234A1Z5"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        error={errors.gstin?.message}
+                        hint="Optional"
+                        autoCapitalize="characters"
+                        editable={!isLoading}
+                      />
+                    )}
+                  />
+                </YStack>
+              )}
+
+              {/* Personal Details Section */}
+              <YStack gap="$4">
+                <H2 fontSize={typography.lg} fontWeight="600" color={colors.gray800 as any}>
+                  Personal Details
+                </H2>
+
+                {/* Name Row */}
+                <XStack gap="$3">
+                  {/* First Name */}
+                  <Controller
+                    control={control}
+                    name="firstName"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <YStack flex={1}>
+                        <Input
+                          label="First Name"
+                          placeholder="John"
+                          value={value}
+                          onChangeText={onChange}
+                          onBlur={onBlur}
+                          error={errors.firstName?.message}
+                          required
+                          autoCapitalize="words"
+                          autoComplete="given-name"
+                          textContentType="givenName"
+                          editable={!isLoading}
+                        />
+                      </YStack>
+                    )}
+                  />
+
+                  {/* Last Name */}
+                  <Controller
+                    control={control}
+                    name="lastName"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <YStack flex={1}>
+                        <Input
+                          label="Last Name"
+                          placeholder="Doe"
+                          value={value}
+                          onChangeText={onChange}
+                          onBlur={onBlur}
+                          error={errors.lastName?.message}
+                          required
+                          autoCapitalize="words"
+                          autoComplete="family-name"
+                          textContentType="familyName"
+                          editable={!isLoading}
+                        />
+                      </YStack>
+                    )}
+                  />
+                </XStack>
+
+                {/* Email */}
                 <Controller
                   control={control}
-                  name="organizationName"
+                  name="email"
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
-                      label="Organization Name"
-                      placeholder={customerType === 'CA_ORG' ? 'ABC & Associates' : 'Your Company Name'}
+                      label="Email Address"
+                      placeholder="you@example.com"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      error={errors.organizationName?.message}
+                      error={errors.email?.message}
                       required
-                      autoCapitalize="words"
-                      editable={!isLoading}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      autoCorrect={false}
+                      textContentType="emailAddress"
+                      editable={!isLoading && !params.email}
                     />
                   )}
                 />
-              )}
 
-              {/* GSTIN (optional for organizations) */}
-              {(customerType === 'CA_ORG' || customerType === 'ENTERPRISE') && (
+                {/* Phone */}
                 <Controller
                   control={control}
-                  name="gstin"
+                  name="phone"
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
-                      label="GSTIN"
-                      placeholder="27AABCA1234A1Z5"
+                      label="Phone Number"
+                      placeholder="+919876543210"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      error={errors.gstin?.message}
-                      autoCapitalize="characters"
+                      error={errors.phone?.message}
+                      hint="Optional"
+                      keyboardType="phone-pad"
+                      autoComplete="tel"
+                      textContentType="telephoneNumber"
                       editable={!isLoading}
                     />
                   )}
                 />
-              )}
 
-              {/* First Name */}
-              <Controller
-                control={control}
-                name="firstName"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    label="First Name"
-                    placeholder="John"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    error={errors.firstName?.message}
-                    required
-                    autoCapitalize="words"
-                    autoComplete="given-name"
-                    textContentType="givenName"
-                    editable={!isLoading}
-                  />
-                )}
-              />
-
-              {/* Last Name */}
-              <Controller
-                control={control}
-                name="lastName"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    label="Last Name"
-                    placeholder="Doe"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    error={errors.lastName?.message}
-                    required
-                    autoCapitalize="words"
-                    autoComplete="family-name"
-                    textContentType="familyName"
-                    editable={!isLoading}
-                  />
-                )}
-              />
-
-              {/* Email */}
-              <Controller
-                control={control}
-                name="email"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    label="Email"
-                    placeholder="john@example.com"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    error={errors.email?.message}
-                    required
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoComplete="email"
-                    autoCorrect={false}
-                    textContentType="emailAddress"
-                    editable={!isLoading && !params.email}
-                  />
-                )}
-              />
-
-              {/* Phone */}
-              <Controller
-                control={control}
-                name="phone"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    label="Phone Number"
-                    placeholder="+919876543210"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    error={errors.phone?.message}
-                    keyboardType="phone-pad"
-                    autoComplete="tel"
-                    textContentType="telephoneNumber"
-                    editable={!isLoading}
-                  />
-                )}
-              />
-
-              {/* Date of Birth */}
-              <YStack gap="$1">
-                <Text fontSize={14} fontWeight="500" color="#000">
-                  Date of Birth <Text color="red">*</Text>
-                </Text>
-                {Platform.OS === 'web' ? (
-                  createElement('div', {
-                    style: {
-                      backgroundColor: 'white',
-                      borderRadius: 8,
-                      border: '1px solid #e0e0e0',
-                      padding: 12,
-                    },
-                  }, createElement('input', {
-                    type: 'date',
-                    value: dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : '',
-                    onChange: (e: any) => {
-                      if (e.target.value) {
-                        setValue('dateOfBirth', new Date(e.target.value));
-                      }
-                    },
-                    max: new Date().toISOString().split('T')[0],
-                    disabled: isLoading,
-                    style: {
-                      border: 'none',
-                      outline: 'none',
-                      fontSize: 16,
-                      width: '100%',
-                      backgroundColor: 'transparent',
-                      color: '#000',
-                      fontFamily: 'inherit',
-                    },
-                  }))
-                ) : (
-                  <Pressable
-                    onPress={() => setShowDatePicker(true)}
-                    disabled={isLoading}
-                  >
-                    <XStack
-                      backgroundColor="white"
-                      borderRadius="$3"
-                      borderWidth={1}
-                      borderColor="#e0e0e0"
-                      padding="$3"
-                      paddingVertical="$3.5"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <Text
-                        color={dateOfBirth ? '#000' : '#999'}
-                        fontSize={16}
+                {/* Date of Birth */}
+                <YStack gap="$2">
+                  <XStack alignItems="center" gap="$2">
+                    <Text fontSize={typography.sm} fontWeight="600" color={colors.gray700 as any}>
+                      Date of Birth <Text color={colors.error as any}>*</Text>
+                    </Text>
+                  </XStack>
+                  {Platform.OS === 'web' ? (
+                    <YStack position="relative">
+                      <XStack
+                        backgroundColor={errors.dateOfBirth ? (colors.statusError as any) : (colors.gray100 as any)}
+                        borderRadius="$2"
+                        borderWidth={1}
+                        borderColor={errors.dateOfBirth ? (colors.error as any) : (colors.gray300 as any)}
+                        paddingHorizontal="$4"
+                        height={52}
+                        alignItems="center"
+                        gap="$3"
                       >
-                        {dateOfBirth ? formatDate(dateOfBirth) : 'Select date'}
+                        <Calendar size={20} color={colors.gray600 as any} />
+                        {createElement('input', {
+                          type: 'date',
+                          value: dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : '',
+                          onChange: (e: any) => {
+                            if (e.target.value) {
+                              setValue('dateOfBirth', new Date(e.target.value));
+                            }
+                          },
+                          max: new Date().toISOString().split('T')[0],
+                          disabled: isLoading,
+                          placeholder: 'DD/MM/YYYY',
+                          style: {
+                            border: 'none',
+                            outline: 'none',
+                            fontSize: 16,
+                            width: '100%',
+                            backgroundColor: 'transparent',
+                            color: colors.gray900,
+                            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
+                          },
+                        })}
+                      </XStack>
+                    </YStack>
+                  ) : (
+                    <Pressable
+                      onPress={() => setShowDatePicker(true)}
+                      disabled={isLoading}
+                    >
+                      <XStack
+                        backgroundColor={errors.dateOfBirth ? (colors.statusError as any) : (colors.gray100 as any)}
+                        borderRadius="$2"
+                        borderWidth={1}
+                        borderColor={errors.dateOfBirth ? (colors.error as any) : (colors.gray300 as any)}
+                        paddingHorizontal="$4"
+                        height={52}
+                        alignItems="center"
+                        justifyContent="space-between"
+                        opacity={isLoading ? 0.7 : 1}
+                      >
+                        <XStack alignItems="center" gap="$3" flex={1}>
+                          <Calendar size={20} color={colors.gray600 as any} />
+                          <Text
+                            color={dateOfBirth ? (colors.gray900 as any) : (colors.gray500 as any)}
+                            fontSize={16}
+                          >
+                            {dateOfBirth ? formatDate(dateOfBirth) : 'DD/MM/YYYY'}
+                          </Text>
+                        </XStack>
+                        <YStack
+                          backgroundColor={colors.caPrimary as any}
+                          width={32}
+                          height={32}
+                          borderRadius="$2"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Calendar size={16} color="white" />
+                        </YStack>
+                      </XStack>
+                    </Pressable>
+                  )}
+                  {errors.dateOfBirth && (
+                    <XStack alignItems="center" gap="$1.5">
+                      <Text color={colors.error as any} fontSize={typography.xs}>
+                        {errors.dateOfBirth.message}
                       </Text>
-                      <Calendar size={20} color="#666" />
                     </XStack>
-                  </Pressable>
-                )}
-                {errors.dateOfBirth && (
-                  <Text color="red" fontSize={12}>
-                    {errors.dateOfBirth.message}
-                  </Text>
+                  )}
+                </YStack>
+
+                {/* Mobile date picker modal */}
+                {Platform.OS !== 'web' && showDatePicker && (
+                  <DateTimePicker
+                    value={dateOfBirth || new Date(2000, 0, 1)}
+                    mode="date"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    maximumDate={new Date()}
+                    onChange={(event, selectedDate) => {
+                      setShowDatePicker(Platform.OS === 'ios');
+                      if (selectedDate) {
+                        setValue('dateOfBirth', selectedDate);
+                      }
+                    }}
+                  />
                 )}
               </YStack>
 
-              {/* Mobile date picker modal */}
-              {Platform.OS !== 'web' && showDatePicker && (
-                <DateTimePicker
-                  value={dateOfBirth || new Date(2000, 0, 1)}
-                  mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  maximumDate={new Date()}
-                  onChange={(event, selectedDate) => {
-                    setShowDatePicker(Platform.OS === 'ios');
-                    if (selectedDate) {
-                      setValue('dateOfBirth', selectedDate);
-                    }
-                  }}
+              {/* Security Section */}
+              <YStack gap="$4">
+                <H2 fontSize={typography.lg} fontWeight="600" color={colors.gray800 as any}>
+                  Security
+                </H2>
+
+                {/* Password */}
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <PasswordInput
+                      label="Password"
+                      placeholder="Create a strong password"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      error={errors.password?.message}
+                      required
+                      autoComplete="password-new"
+                      textContentType="newPassword"
+                      editable={!isLoading}
+                    />
+                  )}
                 />
-              )}
 
-              {/* Password */}
-              <Controller
-                control={control}
-                name="password"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <PasswordInput
-                    label="Password"
-                    placeholder="••••••••"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    error={errors.password?.message}
-                    required
-                    autoComplete="password-new"
-                    textContentType="newPassword"
-                    editable={!isLoading}
-                  />
-                )}
-              />
+                {/* Password Strength Indicator */}
+                <PasswordStrengthIndicator password={password} />
 
-              {/* Password Strength Indicator */}
-              <PasswordStrengthIndicator password={password} />
-
-              {/* Confirm Password */}
-              <Controller
-                control={control}
-                name="confirmPassword"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <PasswordInput
-                    label="Confirm Password"
-                    placeholder="••••••••"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    error={errors.confirmPassword?.message}
-                    required
-                    autoComplete="password-new"
-                    textContentType="newPassword"
-                    editable={!isLoading}
-                  />
-                )}
-              />
+                {/* Confirm Password */}
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <PasswordInput
+                      label="Confirm Password"
+                      placeholder="Re-enter your password"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      error={errors.confirmPassword?.message}
+                      required
+                      autoComplete="password-new"
+                      textContentType="newPassword"
+                      editable={!isLoading}
+                    />
+                  )}
+                />
+              </YStack>
 
               {/* Terms and Conditions */}
               <Controller
@@ -516,25 +629,18 @@ export default function SignupScreen() {
                 name="termsAccepted"
                 render={({ field: { value, onChange } }) => (
                   <YStack gap="$2">
-                    <XStack
-                      alignItems="center"
-                      gap="$3"
-                      onPress={() => onChange(!value)}
-                    >
+                    <XStack alignItems="flex-start" gap="$3">
                       <Pressable
                         onPress={() => onChange(!value)}
-                        hitSlop={10}
-                        accessibilityLabel="Accept terms and conditions"
-                        accessibilityRole="checkbox"
-                        accessibilityState={{ checked: value }}
+                        hitSlop={spacing.sm}
                       >
                         <View
                           width={20}
                           height={20}
                           borderRadius="$1"
                           borderWidth={2}
-                          borderColor={errors.termsAccepted ? 'red' : '#ccc'}
-                          backgroundColor={value ? '#3d4f6f' : 'transparent'}
+                          borderColor={errors.termsAccepted ? (colors.error as any) : (colors.gray300 as any)}
+                          backgroundColor={value ? (colors.caPrimary as any) : 'transparent'}
                           justifyContent="center"
                           alignItems="center"
                         >
@@ -542,13 +648,15 @@ export default function SignupScreen() {
                         </View>
                       </Pressable>
                       <Text
-                        fontSize={12}
-                        color="#666"
+                        fontSize={typography.sm}
+                        color={colors.gray700 as any}
                         flex={1}
                         onPress={() => onChange(!value)}
                       >
                         I agree to the{' '}
                         <Text
+                          fontWeight="600"
+                          color={colors.caPrimary as any}
                           textDecorationLine="underline"
                           onPress={() => router.push('/terms-of-service' as any)}
                         >
@@ -556,16 +664,17 @@ export default function SignupScreen() {
                         </Text>{' '}
                         and{' '}
                         <Text
+                          fontWeight="600"
+                          color={colors.caPrimary as any}
                           textDecorationLine="underline"
                           onPress={() => router.push('/privacy-policy' as any)}
                         >
                           Privacy Policy
                         </Text>
-                        .
                       </Text>
                     </XStack>
                     {errors.termsAccepted && (
-                      <Text color="red" fontSize={12} marginLeft="$5">
+                      <Text color={colors.error as any} fontSize={typography.xs} marginLeft="$5">
                         {errors.termsAccepted.message}
                       </Text>
                     )}
@@ -580,33 +689,68 @@ export default function SignupScreen() {
                   loading={isLoading}
                   loadingText="Creating account..."
                   fullWidth
-                  accessibilityLabel="Create account"
-                  accessibilityHint="Submit your information to create a new account"
                 >
                   Create Account
                 </Button>
               </YStack>
+            </YStack>
 
-              {/* Divider */}
-              <Separator marginVertical="$3" />
+            {/* Divider */}
+            <XStack alignItems="center" gap="$3">
+              <Separator flex={1} />
+              <Text fontSize={typography.sm} color={colors.gray500 as any}>
+                Already have an account?
+              </Text>
+              <Separator flex={1} />
+            </XStack>
 
-              {/* Sign In Link */}
-              <XStack justifyContent="center" gap="$1">
-                <Text color="$colorSecondary" fontSize={14}>
-                  Already have an account?
-                </Text>
-                <Text
-                  color="#3d4f6f"
-                  fontSize={14}
-                  fontWeight="600"
+            {/* Sign In Link */}
+            <YStack
+              backgroundColor="white"
+              borderRadius="$5"
+              padding="$4"
+              borderWidth={1}
+              borderColor={colors.gray200 as any}
+            >
+              <XStack justifyContent="center" alignItems="center" gap="$2">
+                <Pressable
                   onPress={() => router.push('/login')}
-                  accessibilityRole="link"
-                  accessibilityLabel="Sign in"
-                  pressStyle={{ opacity: 0.7 }}
-                  textDecorationLine="underline"
+                  hitSlop={spacing.sm}
                 >
-                  Sign in
-                </Text>
+                  <Text
+                    fontSize={typography.base}
+                    fontWeight="700"
+                    color={colors.caPrimary as any}
+                  >
+                    Sign In Instead
+                  </Text>
+                </Pressable>
+              </XStack>
+            </YStack>
+
+            {/* Footer */}
+            <YStack alignItems="center" gap="$2" marginTop="$4">
+              <Text fontSize={typography.xs} color={colors.gray400 as any} textAlign="center">
+                © 2025 Tax Chanakya. All rights reserved.
+              </Text>
+              <XStack gap="$3">
+                <Pressable onPress={() => router.push('/terms-of-service' as any)}>
+                  <Text fontSize={typography.xs} color={colors.gray500 as any} textDecorationLine="underline">
+                    Terms
+                  </Text>
+                </Pressable>
+                <Text fontSize={typography.xs} color={colors.gray400 as any}>•</Text>
+                <Pressable onPress={() => router.push('/privacy-policy' as any)}>
+                  <Text fontSize={typography.xs} color={colors.gray500 as any} textDecorationLine="underline">
+                    Privacy
+                  </Text>
+                </Pressable>
+                <Text fontSize={typography.xs} color={colors.gray400 as any}>•</Text>
+                <Pressable onPress={() => router.push('/support' as any)}>
+                  <Text fontSize={typography.xs} color={colors.gray500 as any} textDecorationLine="underline">
+                    Support
+                  </Text>
+                </Pressable>
               </XStack>
             </YStack>
           </YStack>
@@ -620,24 +764,40 @@ export default function SignupScreen() {
 function PasswordStrengthIndicator({ password = '' }: { password?: string }) {
   const criteria = [
     { label: 'At least 8 characters', regex: /.{8,}/ },
-    { label: 'An uppercase letter', regex: /[A-Z]/ },
-    { label: 'A lowercase letter', regex: /[a-z]/ },
-    { label: 'A number', regex: /\d/ },
+    { label: 'Uppercase letter', regex: /[A-Z]/ },
+    { label: 'Lowercase letter', regex: /[a-z]/ },
+    { label: 'Number', regex: /\d/ },
   ];
 
   return (
-    <YStack gap="$2" paddingHorizontal="$1" marginTop="$1">
+    <YStack
+      gap="$2"
+      padding="$3"
+      backgroundColor={colors.gray50 as any}
+      borderRadius="$3"
+    >
+      <Text fontSize={typography.xs} fontWeight="600" color={colors.gray700 as any}>
+        Password must contain:
+      </Text>
       {criteria.map((criterion, index) => {
         const met = criterion.regex.test(password);
         return (
           <XStack key={index} alignItems="center" gap="$2">
-            <Check
-              size={16}
-              color={met ? '$green10' : '$gray8'}
-              animation="bouncy"
-              key={met ? 'met' : 'unmet'}
-            />
-            <Text fontSize={12} color={met ? '$green11' : '$gray10'}>
+            <View
+              width={16}
+              height={16}
+              borderRadius="$full"
+              backgroundColor={met ? (colors.success as any) : (colors.gray300 as any)}
+              alignItems="center"
+              justifyContent="center"
+            >
+              {met && <Check size={12} color="white" />}
+            </View>
+            <Text
+              fontSize={typography.xs}
+              color={met ? (colors.success as any) : (colors.gray600 as any)}
+              fontWeight={met ? '600' : '400'}
+            >
               {criterion.label}
             </Text>
           </XStack>
