@@ -17,7 +17,7 @@ const createStyle = (styleTagId: string) => {
 };
 
 export const useSafeLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+  typeof globalThis.window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export function GluestackUIProvider({
   mode = 'light',
@@ -58,15 +58,16 @@ export function GluestackUIProvider({
 
   useSafeLayoutEffect(() => {
     if (mode !== 'system') return;
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const media = globalThis.window?.matchMedia('(prefers-color-scheme: dark)');
+    if (!media) return;
 
-    media.addListener(handleMediaQuery);
+    media.addEventListener('change', handleMediaQuery);
 
-    return () => media.removeListener(handleMediaQuery);
+    return () => media.removeEventListener('change', handleMediaQuery);
   }, [handleMediaQuery]);
 
   useSafeLayoutEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof globalThis.window !== 'undefined') {
       const documentElement = document.documentElement;
       if (documentElement) {
         const head = documentElement.querySelector('head');
